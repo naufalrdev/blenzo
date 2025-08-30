@@ -1,6 +1,6 @@
 import 'package:blenzo/extensions/navigations.dart';
 import 'package:blenzo/utils/app_color.dart';
-import 'package:blenzo/views/homescreen.dart';
+import 'package:blenzo/views/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -136,11 +136,6 @@ class _OnboardScreenState extends State<OnboardScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextButton(
-                    // style: TextButton.styleFrom(
-                    //   foregroundColor: currentPage == 0
-                    //       ? AppColor.text2
-                    //       : AppColor.text,
-                    // ),
                     onPressed: currentPage == 0
                         ? null
                         : () {
@@ -165,11 +160,11 @@ class _OnboardScreenState extends State<OnboardScreen> {
                   ),
                   TextButton(
                     style: TextButton.styleFrom(
-                      foregroundColor: AppColor.secondary,
+                      foregroundColor: AppColor.primary,
                     ),
                     onPressed: () {
                       if (onLastPage) {
-                        context.push(HomeScreen());
+                        context.push(LoginScreen());
                       } else {
                         _controller.nextPage(
                           duration: Duration(milliseconds: 500),
