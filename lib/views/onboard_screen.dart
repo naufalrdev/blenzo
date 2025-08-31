@@ -6,6 +6,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardScreen extends StatefulWidget {
   const OnboardScreen({super.key});
+  static const id = "/onboard_screen";
 
   @override
   State<OnboardScreen> createState() => _OnboardScreenState();

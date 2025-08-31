@@ -29,7 +29,6 @@ extension ExtendedNavigator on BuildContext {
     String newRouteName, {
     Object? arguments,
   }) {
-    Navigator.popUntil(this, ModalRoute.withName(newRouteName));
     return Navigator.pushNamed(this, newRouteName, arguments: arguments);
   }
 

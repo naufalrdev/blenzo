@@ -1,8 +1,14 @@
+import 'package:blenzo/extensions/navigations.dart';
+import 'package:blenzo/models/regist_user_model.dart';
+import 'package:blenzo/services/api/regist_user.dart';
+import 'package:blenzo/services/local/shared_prefs_service.dart';
 import 'package:blenzo/utils/app_color.dart';
+import 'package:blenzo/views/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
+  static const id = "/register";
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -12,11 +18,60 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  RegistUserModel? user;
+  String? errorMessage;
   bool isVisibility = false;
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(body: Stack(children: [buildBackground(), buildLayer()]));
+  }
+
+  void registUser() async {
+    setState(() {
+      isLoading = true;
+      errorMessage = null;
+    });
+    final name = nameController.text;
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+    if (name.isEmpty || email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Name, Email, and Password cannot be empty"),
+        ),
+      );
+      isLoading = false;
+      return;
+    }
+    try {
+      final results = await AuthenticationAPI.registerUser(
+        email: email,
+        password: password,
+        name: name,
+      );
+      setState(() {
+        user = results;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Registration was successful")),
+      );
+      PreferenceHandler.saveToken(user?.data.token.toString() ?? "");
+      Navigator.pushNamed(context, LoginScreen.id);
+
+      print(user?.toJson());
+    } catch (e) {
+      print(e);
+      setState(() {
+        errorMessage = e.toString();
+      });
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(errorMessage.toString())));
+    } finally {
+      setState(() {});
+      isLoading = false;
+    }
   }
 
   Widget socialButton(String image) {
@@ -174,7 +229,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       borderRadius: BorderRadiusGeometry.circular(10),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    isLoading ? null : registUser();
+                  },
                   child: Text(
                     "Create Account",
                     style: TextStyle(

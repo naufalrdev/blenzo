@@ -37,6 +37,7 @@ dependencies:
   rename_app: ^1.6.5
   smooth_page_indicator: ^1.2.1
   shared_preferences: ^2.5.3
+  http: ^1.5.0
 
 dev_dependencies:
   flutter_test:

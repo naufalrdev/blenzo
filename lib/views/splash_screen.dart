@@ -3,11 +3,13 @@ import 'package:blenzo/services/local/shared_prefs_service.dart';
 import 'package:blenzo/utils/app_color.dart';
 import 'package:blenzo/utils/app_image.dart';
 import 'package:blenzo/views/home_screen.dart';
+import 'package:blenzo/views/login_screen.dart';
 import 'package:blenzo/views/onboard_screen.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
+  static const id = "/splash_screen";
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -25,9 +27,9 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(const Duration(seconds: 3)).then((_) {
       print(isLogin);
       if (isLogin == true) {
-        context.pushReplacement(HomeScreen());
+        Navigator.pushReplacementNamed(context, HomeScreen.id);
       } else {
-        context.push(OnboardScreen());
+        Navigator.pushNamed(context, OnboardScreen.id);
       }
     });
   }
