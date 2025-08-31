@@ -1,19 +1,19 @@
-import 'package:blenzo/extensions/navigations.dart';
 import 'package:blenzo/utils/app_color.dart';
-import 'package:blenzo/views/register_screen.dart';
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isVisibility = false;
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(body: Stack(children: [buildBackground(), buildLayer()]));
@@ -99,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Welcome\nBack!",
+                "Create an\naccount",
                 style: TextStyle(
                   fontFamily: "Montserrat",
                   fontSize: 36,
@@ -108,6 +108,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               height(32),
+              buildTextField(controller: nameController, labelText: "Name"),
+              height(16),
               buildTextField(
                 controller: emailController,
                 labelText: "Email Address",
@@ -118,23 +120,50 @@ class _LoginScreenState extends State<LoginScreen> {
                 labelText: "Password",
                 isPassword: true,
               ),
-              // height(10),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    "Forgot Password?",
-                    style: TextStyle(
-                      fontFamily: "Montserrat",
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: AppColor.primary,
-                    ),
+              height(14),
+              Text.rich(
+                textAlign: TextAlign.justify,
+                TextSpan(
+                  text: "By clicking the ",
+                  style: TextStyle(
+                    fontFamily: "Montserrat",
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: AppColor.text,
                   ),
+                  children: [
+                    TextSpan(
+                      text: "Register",
+                      style: TextStyle(
+                        fontFamily: "Montserrat",
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: AppColor.primary,
+                      ),
+                    ),
+                    TextSpan(
+                      text: " button, you agree\n",
+                      style: TextStyle(
+                        fontFamily: "Montserrat",
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: AppColor.text,
+                      ),
+                    ),
+                    TextSpan(
+                      text: "to the public offer",
+                      style: TextStyle(
+                        fontFamily: "Montserrat",
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: AppColor.text,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              height(18),
+
+              height(24),
               SizedBox(
                 height: 56,
                 width: double.infinity,
@@ -147,7 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   onPressed: () {},
                   child: Text(
-                    "Login",
+                    "Create Account",
                     style: TextStyle(
                       fontFamily: "Montserrat",
                       fontSize: 20,
@@ -178,35 +207,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   socialButton("assets/images/apple.png"),
                   width(12),
                   socialButton("assets/images/facebook.png"),
-                ],
-              ),
-              height(30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Create an Account ",
-                    style: TextStyle(
-                      fontFamily: "Montserrat",
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: AppColor.text,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      context.push(RegisterScreen());
-                    },
-                    child: Text(
-                      "Sign Up",
-                      style: TextStyle(
-                        fontFamily: "Montserrat",
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: AppColor.primary,
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ],

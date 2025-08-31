@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       //   SplashScreen1.id: (context) => SplashScreen1(),
       //   BotNavBar1.id: (context) => BotNavBar1(),
       // },
-      home: OnboardScreen(),
+      home: SplashScreen(),
     );
   }
 }
