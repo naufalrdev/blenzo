@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'package:blenzo/models/get_user.dart';
-import 'package:blenzo/models/regist_user_model.dart';
+import 'package:blenzo/models/user/get_user.dart';
+import 'package:blenzo/models/user/regist_user.dart';
 import 'package:blenzo/services/api/endpoint/api_endpoint.dart';
 import 'package:blenzo/services/local/shared_prefs_service.dart';
 import 'package:http/http.dart' as http;
 
-class AuthenticationAPI {
+class AuthenticationAPIUser {
   static Future<RegistUserModel> registerUser({
     required String email,
     required String password,

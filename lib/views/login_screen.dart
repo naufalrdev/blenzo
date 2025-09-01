@@ -1,21 +1,21 @@
 import 'package:blenzo/extensions/navigations.dart';
-import 'package:blenzo/models/regist_user_model.dart';
-import 'package:blenzo/services/api/regist_user.dart';
+import 'package:blenzo/models/user/regist_user.dart';
+import 'package:blenzo/services/api/user_api.dart';
 import 'package:blenzo/services/local/shared_prefs_service.dart';
 import 'package:blenzo/utils/app_color.dart';
-import 'package:blenzo/views/login_screen.dart';
+import 'package:blenzo/views/register_screen.dart';
+import 'package:blenzo/widgets/botnavbar.dart';
 import 'package:flutter/material.dart';
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
-  static const id = "/register";
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+  static const id = "/login";
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
-  final TextEditingController nameController = TextEditingController();
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   RegistUserModel? user;
@@ -27,62 +27,45 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(body: Stack(children: [buildBackground(), buildLayer()]));
   }
 
-  void registUser() async {
+  void loginUser() async {
     setState(() {
       isLoading = true;
       errorMessage = null;
     });
-
-    final name = nameController.text;
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
-
-    if (name.isEmpty || email.isEmpty || password.isEmpty) {
+    if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Name, Email, and Password cannot be empty"),
-        ),
+        const SnackBar(content: Text("Email and Password cannot be empty")),
       );
-      setState(() {
-        isLoading = false;
-      });
+      isLoading = false;
       return;
     }
-
     try {
-      final results = await AuthenticationAPI.registerUser(
+      final results = await AuthenticationAPIUser.loginUser(
         email: email,
         password: password,
-        name: name,
       );
-
       setState(() {
         user = results;
       });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Registration was successful")),
-      );
-
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Login successful")));
       PreferenceHandler.saveToken(user?.data.token.toString() ?? "");
-
-      // Navigasi ke login page
-      context.pop(LoginScreen());
-
+      context.pushReplacement(BotNavBar1());
       print(user?.toJson());
     } catch (e) {
       print(e);
       setState(() {
         errorMessage = e.toString();
       });
-
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(errorMessage.toString())));
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      setState(() {});
+      isLoading = false;
     }
   }
 
@@ -166,7 +149,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Create an\naccount",
+                "Welcome\nBack!",
                 style: TextStyle(
                   fontFamily: "Montserrat",
                   fontSize: 36,
@@ -175,8 +158,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ),
               height(32),
-              buildTextField(controller: nameController, labelText: "Name"),
-              height(16),
               buildTextField(
                 controller: emailController,
                 labelText: "Email Address",
@@ -187,50 +168,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 labelText: "Password",
                 isPassword: true,
               ),
-              height(14),
-              Text.rich(
-                textAlign: TextAlign.justify,
-                TextSpan(
-                  text: "By clicking the ",
-                  style: TextStyle(
-                    fontFamily: "Montserrat",
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: AppColor.text,
+              // height(10),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    "Forgot Password?",
+                    style: TextStyle(
+                      fontFamily: "Montserrat",
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: AppColor.primary,
+                    ),
                   ),
-                  children: [
-                    TextSpan(
-                      text: "Register",
-                      style: TextStyle(
-                        fontFamily: "Montserrat",
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: AppColor.primary,
-                      ),
-                    ),
-                    TextSpan(
-                      text: " button, you agree\n",
-                      style: TextStyle(
-                        fontFamily: "Montserrat",
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: AppColor.text,
-                      ),
-                    ),
-                    TextSpan(
-                      text: "to the public offer",
-                      style: TextStyle(
-                        fontFamily: "Montserrat",
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: AppColor.text,
-                      ),
-                    ),
-                  ],
                 ),
               ),
-
-              height(24),
+              height(18),
               SizedBox(
                 height: 56,
                 width: double.infinity,
@@ -242,10 +196,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   onPressed: () {
-                    isLoading ? null : registUser();
+                    loginUser();
                   },
                   child: Text(
-                    "Create Account",
+                    "Login",
                     style: TextStyle(
                       fontFamily: "Montserrat",
                       fontSize: 20,
@@ -276,6 +230,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   socialButton("assets/images/apple.png"),
                   width(12),
                   socialButton("assets/images/facebook.png"),
+                ],
+              ),
+              height(30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Create an Account ",
+                    style: TextStyle(
+                      fontFamily: "Montserrat",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: AppColor.text,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      context.push(RegisterScreen());
+                    },
+                    child: Text(
+                      "Sign Up",
+                      style: TextStyle(
+                        fontFamily: "Montserrat",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: AppColor.primary,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ],

@@ -1,5 +1,5 @@
 import 'package:blenzo/utils/app_color.dart';
-import 'package:blenzo/views/dashboard.dart';
+import 'package:blenzo/views/dashboard_screen.dart';
 import 'package:blenzo/views/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
