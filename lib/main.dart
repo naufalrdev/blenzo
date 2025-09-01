@@ -1,8 +1,6 @@
-import 'package:blenzo/views/home_screen.dart';
-import 'package:blenzo/views/login_screen.dart';
 import 'package:blenzo/views/onboard_screen.dart';
-import 'package:blenzo/views/register_screen.dart';
 import 'package:blenzo/views/splash_screen.dart';
+import 'package:blenzo/widgets/botnavbar.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -25,13 +23,11 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       initialRoute: SplashScreen.id,
       routes: {
-        SplashScreen.id: (context) => const SplashScreen(),
-        OnboardScreen.id: (context) => const OnboardScreen(),
-        RegisterScreen.id: (context) => const RegisterScreen(),
-        LoginScreen.id: (context) => const LoginScreen(),
-        HomeScreen.id: (context) => const HomeScreen(),
+        SplashScreen.id: (context) => SplashScreen(),
+        OnboardScreen.id: (context) => OnboardScreen(),
+        BotNavBar1.id: (context) => BotNavBar1(),
       },
-      // home: SplashScreen(),
+      // home: LoginScreen(?),
     );
   }
 }

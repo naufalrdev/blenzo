@@ -2,9 +2,8 @@ import 'package:blenzo/extensions/navigations.dart';
 import 'package:blenzo/services/local/shared_prefs_service.dart';
 import 'package:blenzo/utils/app_color.dart';
 import 'package:blenzo/utils/app_image.dart';
-import 'package:blenzo/views/home_screen.dart';
-import 'package:blenzo/views/login_screen.dart';
 import 'package:blenzo/views/onboard_screen.dart';
+import 'package:blenzo/widgets/botnavbar.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -19,17 +18,20 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    checkLogin();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      checkLogin();
+    });
   }
 
   void checkLogin() async {
     final isLogin = await PreferenceHandler.getLogin();
     Future.delayed(const Duration(seconds: 3)).then((_) {
-      print(isLogin);
+      if (!mounted) return;
+
       if (isLogin == true) {
-        Navigator.pushReplacementNamed(context, HomeScreen.id);
+        context.pushReplacementNamed(BotNavBar1.id);
       } else {
-        Navigator.pushNamed(context, OnboardScreen.id);
+        context.pushNamed(OnboardScreen.id);
       }
     });
   }

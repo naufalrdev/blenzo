@@ -3,8 +3,8 @@ import 'package:blenzo/models/regist_user_model.dart';
 import 'package:blenzo/services/api/regist_user.dart';
 import 'package:blenzo/services/local/shared_prefs_service.dart';
 import 'package:blenzo/utils/app_color.dart';
-import 'package:blenzo/views/home_screen.dart';
 import 'package:blenzo/views/register_screen.dart';
+import 'package:blenzo/widgets/botnavbar.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -53,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
         context,
       ).showSnackBar(const SnackBar(content: Text("Login successful")));
       PreferenceHandler.saveToken(user?.data.token.toString() ?? "");
-      Navigator.pushReplacementNamed(context, HomeScreen.id);
+      context.pushReplacement(BotNavBar1());
       print(user?.toJson());
     } catch (e) {
       print(e);
@@ -247,7 +247,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, RegisterScreen.id);
+                      context.push(RegisterScreen());
                     },
                     child: Text(
                       "Sign Up",

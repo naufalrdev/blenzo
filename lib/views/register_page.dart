@@ -32,32 +32,42 @@ class _RegisterScreenState extends State<RegisterScreen> {
       isLoading = true;
       errorMessage = null;
     });
+
     final name = nameController.text;
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
+
     if (name.isEmpty || email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Name, Email, and Password cannot be empty"),
         ),
       );
-      isLoading = false;
+      setState(() {
+        isLoading = false;
+      });
       return;
     }
+
     try {
       final results = await AuthenticationAPI.registerUser(
         email: email,
         password: password,
         name: name,
       );
+
       setState(() {
         user = results;
       });
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Registration was successful")),
       );
+
       PreferenceHandler.saveToken(user?.data.token.toString() ?? "");
-      Navigator.pushNamed(context, LoginScreen.id);
+
+      // Navigasi ke login page
+      context.pop(LoginScreen());
 
       print(user?.toJson());
     } catch (e) {
@@ -65,12 +75,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
       setState(() {
         errorMessage = e.toString();
       });
+
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(errorMessage.toString())));
     } finally {
-      setState(() {});
-      isLoading = false;
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
