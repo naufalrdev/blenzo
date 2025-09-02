@@ -1,9 +1,12 @@
+import 'package:blenzo/extensions/navigations.dart';
 import 'package:blenzo/models/brand/get_brand.dart';
 import 'package:blenzo/models/product/get_product.dart';
 import 'package:blenzo/services/api/brand_api.dart';
 import 'package:blenzo/services/api/product_api.dart';
 import 'package:blenzo/utils/app_color.dart';
 import 'package:blenzo/utils/brand_image.dart';
+import 'package:blenzo/utils/currency_format.dart';
+import 'package:blenzo/views/product_detail.dart';
 import 'package:blenzo/widgets/brand_carousel.dart';
 import 'package:flutter/material.dart';
 
@@ -176,8 +179,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   );
                 },
               ),
-              // height(16),
               BrandCarousel(),
+              height(20),
               FutureBuilder(
                 future: futureProduct,
                 builder: (context, snapshot) {
@@ -189,21 +192,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     return const Center(child: Text("No Brands found"));
                   }
                   final productList = snapshot.data!.data;
-                  return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: GridView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: productList.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                        childAspectRatio: 0.65,
-                      ),
-                      itemBuilder: (context, index) {
-                        final p = productList[index];
-                        return Container(
+                  return GridView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: productList.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                      childAspectRatio: 0.65,
+                    ),
+                    itemBuilder: (context, index) {
+                      final p = productList[index];
+                      final discount = int.tryParse(p.discount ?? "0") ?? 0;
+                      final double rating =
+                          3.0 + (index % 3); // contoh variasi rating
+                      final int reviewCount =
+                          (index + 1) * 5; // contoh jumlah review
+
+                      return GestureDetector(
+                        onTap: () {
+                          context.push(ProductDetailPage(product: p));
+                        },
+                        child: Container(
                           decoration: BoxDecoration(
                             color: AppColor.neutral,
                             borderRadius: BorderRadius.circular(12),
@@ -218,25 +229,61 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              ClipRRect(
-                                borderRadius: BorderRadiusGeometry.vertical(
-                                  top: Radius.circular(12),
-                                ),
-                                child: p.imageUrls.isNotEmpty
-                                    ? Image.network(
-                                        p.imageUrls[0],
-                                        height: 150,
-                                        width: double.infinity,
-                                        fit: BoxFit.cover,
-                                      )
-                                    : Container(
-                                        height: 150,
-                                        color: Colors.grey[300],
-                                        child: Icon(Icons.image, size: 50),
+                              Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: const BorderRadius.vertical(
+                                      top: Radius.circular(12),
+                                    ),
+                                    child: p.imageUrls.isNotEmpty
+                                        ? Image.network(
+                                            p.imageUrls[0],
+                                            height: 160,
+                                            width: double.infinity,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : Container(
+                                            height: 150,
+                                            width: double.infinity,
+                                            color: Colors.grey[300],
+                                            child: const Icon(
+                                              Icons.image,
+                                              size: 50,
+                                            ),
+                                          ),
+                                  ),
+                                  if (discount > 0)
+                                    Align(
+                                      alignment: Alignment.topRight,
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 4,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: AppColor.neutral,
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          "-${p.discount}%",
+                                          style: const TextStyle(
+                                            fontFamily: "Montserrat",
+                                            color: AppColor.primary,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12,
+                                          ),
+                                        ),
                                       ),
+                                    ),
+                                ],
                               ),
                               Padding(
-                                padding: EdgeInsets.all(8),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
                                 child: Text(
                                   p.name,
                                   maxLines: 2,
@@ -250,62 +297,43 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 8),
-                                child: Text(
-                                  p.description,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontFamily: "Montserrat",
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColor.text,
-                                  ),
-                                ),
-                              ),
-                              Spacer(),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 8),
+                                padding: EdgeInsets.symmetric(horizontal: 6),
                                 child: Row(
                                   children: [
-                                    Text(
-                                      "Rp${p.price}",
-                                      style: TextStyle(
-                                        fontFamily: "Montserrat",
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColor.text,
-                                      ),
+                                    Icon(
+                                      Icons.star,
+                                      size: 16,
+                                      color: Colors.amber,
                                     ),
-                                    width(6),
+                                    SizedBox(width: 4),
                                     Text(
-                                      "Rp100000",
+                                      "$rating",
                                       style: TextStyle(
-                                        decoration: TextDecoration.lineThrough,
-                                        fontFamily: "Montserrat",
                                         fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColor.text,
-                                      ),
-                                    ),
-                                    width(6),
-                                    Text(
-                                      "${p.discount}%Off",
-                                      style: TextStyle(
-                                        fontFamily: "Montserrat",
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.red,
+                                        color: AppColor.text2,
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
+                              Spacer(),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: Text(
+                                  formatRupiah(p.price),
+                                  style: TextStyle(
+                                    fontFamily: "Montserrat",
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColor.primary,
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      );
+                    },
                   );
                 },
               ),
