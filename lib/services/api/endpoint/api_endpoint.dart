@@ -4,4 +4,5 @@ class Endpoint {
   static const String profile = "$baseURL/profile";
   static const String login = "$baseURL/login";
   static const String brands = "$baseURL/brands";
+  static const String products = "$baseURL/products";
 }

@@ -1,7 +1,10 @@
 import 'package:blenzo/models/brand/get_brand.dart';
+import 'package:blenzo/models/product/get_product.dart';
 import 'package:blenzo/services/api/brand_api.dart';
+import 'package:blenzo/services/api/product_api.dart';
 import 'package:blenzo/utils/app_color.dart';
 import 'package:blenzo/utils/brand_image.dart';
+import 'package:blenzo/widgets/brand_carousel.dart';
 import 'package:flutter/material.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -13,6 +16,7 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   late Future<GetBrandModel> futureBrand;
+  late Future<GetProdukModel> futureProduct;
   TextEditingController searchController = TextEditingController();
   String searchQuery = "";
 
@@ -20,6 +24,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     futureBrand = AuthenticationApiBrand.getBrand();
+    futureProduct = AuthenticationApiProduct.getProduct();
   }
 
   @override
@@ -86,7 +91,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               height(16),
 
-              // Section Title
+              // Section Brand
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -161,6 +166,139 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
                                   ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+              // height(16),
+              BrandCarousel(),
+              FutureBuilder(
+                future: futureProduct,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text("Error: ${snapshot.error}"));
+                  } else if (!snapshot.hasData || snapshot.data!.data.isEmpty) {
+                    return const Center(child: Text("No Brands found"));
+                  }
+                  final productList = snapshot.data!.data;
+                  return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: GridView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: productList.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
+                        childAspectRatio: 0.65,
+                      ),
+                      itemBuilder: (context, index) {
+                        final p = productList[index];
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: AppColor.neutral,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: 6,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadiusGeometry.vertical(
+                                  top: Radius.circular(12),
+                                ),
+                                child: p.imageUrls.isNotEmpty
+                                    ? Image.network(
+                                        p.imageUrls[0],
+                                        height: 150,
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : Container(
+                                        height: 150,
+                                        color: Colors.grey[300],
+                                        child: Icon(Icons.image, size: 50),
+                                      ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(8),
+                                child: Text(
+                                  p.name,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontFamily: "Montserrat",
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColor.text,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 8),
+                                child: Text(
+                                  p.description,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontFamily: "Montserrat",
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColor.text,
+                                  ),
+                                ),
+                              ),
+                              Spacer(),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 8),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "Rp${p.price}",
+                                      style: TextStyle(
+                                        fontFamily: "Montserrat",
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColor.text,
+                                      ),
+                                    ),
+                                    width(6),
+                                    Text(
+                                      "Rp100000",
+                                      style: TextStyle(
+                                        decoration: TextDecoration.lineThrough,
+                                        fontFamily: "Montserrat",
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColor.text,
+                                      ),
+                                    ),
+                                    width(6),
+                                    Text(
+                                      "${p.discount}%Off",
+                                      style: TextStyle(
+                                        fontFamily: "Montserrat",
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
