@@ -11,13 +11,15 @@ String getBrandModelToJson(GetBrandModel data) => json.encode(data.toJson());
 
 class GetBrandModel {
   String message;
-  List<Brand> data;
+  List<BrandDetail> data;
 
   GetBrandModel({required this.message, required this.data});
 
   factory GetBrandModel.fromJson(Map<String, dynamic> json) => GetBrandModel(
     message: json["message"],
-    data: List<Brand>.from(json["data"].map((x) => Brand.fromJson(x))),
+    data: List<BrandDetail>.from(
+      json["data"].map((x) => BrandDetail.fromJson(x)),
+    ),
   );
 
   Map<String, dynamic> toJson() => {
@@ -26,30 +28,30 @@ class GetBrandModel {
   };
 }
 
-class Brand {
+class BrandDetail {
   int id;
   String name;
-  DateTime createdAt;
-  DateTime updatedAt;
+  String? imageUrl;
+  String? imagePath;
 
-  Brand({
+  BrandDetail({
     required this.id,
     required this.name,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.imageUrl,
+    required this.imagePath,
   });
 
-  factory Brand.fromJson(Map<String, dynamic> json) => Brand(
+  factory BrandDetail.fromJson(Map<String, dynamic> json) => BrandDetail(
     id: json["id"],
     name: json["name"],
-    createdAt: DateTime.parse(json["created_at"]),
-    updatedAt: DateTime.parse(json["updated_at"]),
+    imageUrl: json["image_url"],
+    imagePath: json["image_path"],
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
     "name": name,
-    "created_at": createdAt.toIso8601String(),
-    "updated_at": updatedAt.toIso8601String(),
+    "image_url": imageUrl,
+    "image_path": imagePath,
   };
 }

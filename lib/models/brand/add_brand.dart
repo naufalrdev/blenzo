@@ -24,29 +24,37 @@ class AddBrandModel {
 }
 
 class Data {
-  String name;
-  DateTime updatedAt;
-  DateTime createdAt;
   int id;
+  String name;
+  String imageUrl;
+  String imagePath;
+  DateTime createdAt;
+  DateTime updatedAt;
 
   Data({
-    required this.name,
-    required this.updatedAt,
-    required this.createdAt,
     required this.id,
+    required this.name,
+    required this.imageUrl,
+    required this.imagePath,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-    name: json["name"],
-    updatedAt: DateTime.parse(json["updated_at"]),
-    createdAt: DateTime.parse(json["created_at"]),
     id: json["id"],
+    name: json["name"],
+    imageUrl: json["image_url"],
+    imagePath: json["image_path"],
+    createdAt: DateTime.parse(json["created_at"]),
+    updatedAt: DateTime.parse(json["updated_at"]),
   );
 
   Map<String, dynamic> toJson() => {
-    "name": name,
-    "updated_at": updatedAt.toIso8601String(),
-    "created_at": createdAt.toIso8601String(),
     "id": id,
+    "name": name,
+    "image_url": imageUrl,
+    "image_path": imagePath,
+    "created_at": createdAt.toIso8601String(),
+    "updated_at": updatedAt.toIso8601String(),
   };
 }

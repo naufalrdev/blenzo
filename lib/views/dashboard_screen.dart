@@ -4,7 +4,6 @@ import 'package:blenzo/models/product/get_product.dart';
 import 'package:blenzo/services/api/brand_api.dart';
 import 'package:blenzo/services/api/product_api.dart';
 import 'package:blenzo/utils/app_color.dart';
-import 'package:blenzo/utils/brand_image.dart';
 import 'package:blenzo/utils/currency_format.dart';
 import 'package:blenzo/views/product_detail.dart';
 import 'package:blenzo/widgets/brand_carousel.dart';
@@ -149,10 +148,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ],
                                 ),
                                 child: ClipOval(
-                                  child: Image.asset(
-                                    getBrandImage(brand.name),
-                                    fit: BoxFit.contain,
-                                  ),
+                                  child:
+                                      brand.imageUrl != null &&
+                                          brand.imageUrl!.isNotEmpty
+                                      ? Image.network(
+                                          brand.imageUrl!,
+                                          fit: BoxFit.contain,
+                                          width: 65,
+                                          height: 65,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                                return const Icon(
+                                                  Icons.broken_image,
+                                                  size: 30,
+                                                  color: Colors.grey,
+                                                );
+                                              },
+                                        )
+                                      : Image.asset(
+                                          "assets/images/logo_default.png",
+                                          fit: BoxFit.contain,
+                                          width: 65,
+                                          height: 65,
+                                        ),
                                 ),
                               ),
 

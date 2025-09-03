@@ -7,12 +7,15 @@ import 'package:blenzo/services/local/shared_prefs_service.dart';
 import 'package:http/http.dart' as http;
 
 class AuthenticationApiBrand {
-  static Future<AddBrandModel> addBrand({required String name}) async {
+  static Future<AddBrandModel> addBrand({
+    required String name,
+    required String base64Image,
+  }) async {
     final url = Uri.parse(Endpoint.brands);
     final token = await PreferenceHandler.getToken();
     final response = await http.post(
       url,
-      body: {"name": name},
+      body: {"name": name, "image": base64Image},
       headers: {"Accept": "application/json", "Authorization": "Bearer $token"},
     );
     if (response.statusCode == 200) {
