@@ -3,4 +3,5 @@ class AppImage {
   static const String chooseOrder = "assets/images/choose_product_removebg.png";
   static const String makePayment = "assets/images/make_payment_removebg.png";
   static const String getOrder = "assets/images/ get_order_removebg.png";
+  static const String profile = "assets/images/profile.png";
 }
