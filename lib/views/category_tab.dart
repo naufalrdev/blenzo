@@ -2,6 +2,7 @@ import 'package:blenzo/models/categories/get_categories.dart';
 import 'package:blenzo/services/api/categories_api.dart';
 import 'package:blenzo/utils/app_color.dart';
 import 'package:blenzo/utils/image_categories.dart';
+import 'package:blenzo/views/all_category.dart';
 import 'package:flutter/material.dart';
 
 class CategoryTab extends StatefulWidget {
@@ -45,41 +46,52 @@ class _CategoryTabState extends State<CategoryTab> {
               final cat = categories[index];
               final assetPath = getCategoryAsset(cat.name);
               return GestureDetector(
-                onTap: () {},
-                child: Container(
-                  height: 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    image: DecorationImage(
-                      image: AssetImage(assetPath),
-                      fit: BoxFit.cover,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 6,
-                        offset: Offset(0, 3),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ProductByCategoryPage(
+                        categoryId: cat.id,
+                        categoryName: cat.name,
                       ),
-                    ],
-                  ),
-                  child: Container(
+                    ),
+                  );
+                  child:
+                  Container(
+                    height: 100,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
-                      color: Colors.black.withOpacity(0.4),
+                      image: DecorationImage(
+                        image: AssetImage(assetPath),
+                        fit: BoxFit.cover,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 6,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
                     ),
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(
-                      cat.name,
-                      style: TextStyle(
-                        fontFamily: "Montserrat",
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: AppColor.neutral,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.black.withOpacity(0.4),
+                      ),
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        cat.name,
+                        style: TextStyle(
+                          fontFamily: "Montserrat",
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: AppColor.neutral,
+                        ),
                       ),
                     ),
-                  ),
-                ),
+                  );
+                },
               );
             },
           );
