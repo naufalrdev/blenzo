@@ -1,5 +1,4 @@
 import 'package:blenzo/utils/app_color.dart';
-import 'package:blenzo/views/dashboard_screen.dart';
 import 'package:blenzo/views/home_screen.dart';
 import 'package:blenzo/views/wisthlis_screen.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +17,6 @@ class _BotNavBar1State extends State<BotNavBar1> {
   int _currentIndex = 0;
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    // DashboardScreen(),
     WistListScreen(),
     Center(child: Text("Halaman 3")),
     Center(child: Text("Halaman 4")),

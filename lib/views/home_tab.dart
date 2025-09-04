@@ -1,9 +1,12 @@
+import 'package:blenzo/extensions/navigations.dart';
 import 'package:blenzo/models/product/get_product.dart';
 import 'package:blenzo/services/api/product_api.dart';
+import 'package:blenzo/utils/app_color.dart';
 import 'package:blenzo/utils/currency_format.dart';
+import 'package:blenzo/views/all_products.dart';
+import 'package:blenzo/views/product_detail.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:blenzo/utils/app_color.dart';
 
 class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
@@ -118,7 +121,7 @@ class _HomeTabState extends State<HomeTab> {
           /// New Arrivals
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children: [
               Text(
                 "New Arrivals!",
                 style: TextStyle(
@@ -127,12 +130,17 @@ class _HomeTabState extends State<HomeTab> {
                   fontFamily: "Montserrat",
                 ),
               ),
-              Text("See All", style: TextStyle(color: Colors.grey)),
+              GestureDetector(
+                onTap: () {
+                  context.push(AllProductsPage());
+                },
+                child: Text("See All", style: TextStyle(color: AppColor.text2)),
+              ),
             ],
           ),
           const SizedBox(height: 12),
 
-          /// contoh dummy product list
+          /// Product List
           FutureBuilder(
             future: futureProduct,
             builder: (context, snapshot) {
@@ -143,9 +151,7 @@ class _HomeTabState extends State<HomeTab> {
               } else if (!snapshot.hasData || snapshot.data!.data.isEmpty) {
                 return const Center(child: Text("No Products found"));
               }
-
-              final productList = snapshot.data!.data;
-
+              final productList = snapshot.data!.data.take(3).toList();
               return GridView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -159,14 +165,9 @@ class _HomeTabState extends State<HomeTab> {
                 itemBuilder: (context, index) {
                   final p = productList[index];
                   final discount = int.tryParse(p.discount ?? "0") ?? 0;
-
-                  final int priceInt = int.tryParse(p.price) ?? 0;
-                  final int finalPrice = discount > 0
-                      ? (priceInt * (100 - discount) ~/ 100)
-                      : priceInt;
                   return GestureDetector(
                     onTap: () {
-                      // context.push(ProductDetailPage(product: p));
+                      context.push(ProductDetailPage(product: p));
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -256,7 +257,7 @@ class _HomeTabState extends State<HomeTab> {
                                 /// price + discount price
                                 if (discount > 0) ...[
                                   Text(
-                                    formatRupiah(p.price), // original price
+                                    formatRupiah(p.price),
                                     style: const TextStyle(
                                       fontSize: 11,
                                       decoration: TextDecoration.lineThrough,

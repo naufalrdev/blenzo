@@ -39,7 +39,7 @@ class _CategoryTabState extends State<CategoryTab> {
 
           return ListView.separated(
             padding: EdgeInsets.all(16),
-            separatorBuilder: (context, index) => SizedBox(height: 12),
+            separatorBuilder: (context, index) => SizedBox(height: 11),
             itemCount: categories.length,
             itemBuilder: (context, index) {
               final cat = categories[index];
@@ -47,11 +47,13 @@ class _CategoryTabState extends State<CategoryTab> {
               return GestureDetector(
                 onTap: () {},
                 child: Container(
-                  margin: EdgeInsets.only(bottom: 10),
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  height: 100,
                   decoration: BoxDecoration(
-                    color: AppColor.neutral,
                     borderRadius: BorderRadius.circular(12),
+                    image: DecorationImage(
+                      image: AssetImage(assetPath),
+                      fit: BoxFit.cover,
+                    ),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.05),
@@ -60,37 +62,22 @@ class _CategoryTabState extends State<CategoryTab> {
                       ),
                     ],
                   ),
-                  child: Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.horizontal(
-                          left: Radius.circular(12),
-                        ),
-                        child: Image.asset(
-                          assetPath,
-                          width: 100,
-                          height: 80,
-                          fit: BoxFit.cover,
-                        ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.black.withOpacity(0.4),
+                    ),
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      cat.name,
+                      style: TextStyle(
+                        fontFamily: "Montserrat",
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: AppColor.neutral,
                       ),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 12,
-                          ),
-                          child: Text(
-                            cat.name,
-                            style: TextStyle(
-                              fontFamily: "Montserrat",
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: AppColor.text,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               );

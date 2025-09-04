@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:blenzo/models/product/get_product.dart';
 import 'package:blenzo/utils/app_color.dart';
 import 'package:blenzo/utils/currency_format.dart';
-import 'package:blenzo/models/product/get_product.dart'; // model kamu
+import 'package:flutter/material.dart';
 
 class ProductDetailPage extends StatefulWidget {
-  final Datum product; // ambil dari API
+  final Datum product;
 
   const ProductDetailPage({super.key, required this.product});
 
@@ -13,19 +13,22 @@ class ProductDetailPage extends StatefulWidget {
 }
 
 class _ProductDetailPageState extends State<ProductDetailPage> {
-  String selectedSize = "M";
+  int quantity = 1;
 
   @override
   Widget build(BuildContext context) {
     final p = widget.product;
-
-    // ubah harga ke int biar bisa diformat
     final int price = int.tryParse(p.price) ?? 0;
+    final discount = int.tryParse(p.discount ?? "0") ?? 0;
+    final int basePrice = discount > 0
+        ? (price * (100 - discount) ~/ 100)
+        : price;
+    final int totalPrice = basePrice * quantity;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColor.background,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColor.background,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -33,7 +36,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.favorite_border, color: Colors.black),
+            icon: const Icon(Icons.notifications_none, color: Colors.black),
             onPressed: () {},
           ),
           IconButton(
@@ -42,166 +45,182 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // ====== IMAGE SLIDER ======
-            SizedBox(
-              height: 300,
-              child: PageView(
-                children: p.imageUrls.map((url) {
-                  return Image.network(url, fit: BoxFit.cover);
-                }).toList(),
-              ),
-            ),
-
-            // ====== DETAIL ======
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-              ),
+      body: Column(
+        children: [
+          // ==== SCROLLABLE CONTENT ====
+          Expanded(
+            child: SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Nama Produk & Harga
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          p.name,
-                          style: const TextStyle(
-                            fontSize: 20,
+                  // IMAGE
+                  SizedBox(
+                    height: 350,
+                    child: PageView(
+                      children: p.imageUrls.map((url) {
+                        return Image.network(url, fit: BoxFit.cover);
+                      }).toList(),
+                    ),
+                  ),
+
+                  // DETAIL
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
+                    decoration: const BoxDecoration(
+                      color: AppColor.neutral,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(40),
+                        topRight: Radius.circular(40),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Nama Produk + Qty
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                p.name,
+                                style: const TextStyle(
+                                  fontFamily: "Montserrat",
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColor.text,
+                                ),
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    if (quantity > 1) {
+                                      setState(() => quantity--);
+                                    }
+                                  },
+                                  icon: const Icon(Icons.remove_circle_outline),
+                                ),
+                                Text(
+                                  quantity.toString(),
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontFamily: "Montserrat",
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    setState(() => quantity++);
+                                  },
+                                  icon: const Icon(Icons.add_circle_outline),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+
+                        SizedBox(height: 6),
+                        Row(
+                          children: [
+                            Spacer(),
+                            Text(
+                              "Available in stock",
+                              style: TextStyle(
+                                fontFamily: "Montserrat",
+                                color: AppColor.text2,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        SizedBox(height: 20),
+
+                        // Deskripsi
+                        Text(
+                          "Description",
+                          style: TextStyle(
                             fontWeight: FontWeight.bold,
+                            fontFamily: "Montserrat",
+                            color: AppColor.text,
                           ),
                         ),
-                      ),
-                      Text(
-                        formatRupiah(p.price),
-                        style: TextStyle(
-                          fontFamily: "Montserrat",
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: AppColor.primary,
+                        SizedBox(height: 5),
+                        Text(
+                          p.description,
+                          style: const TextStyle(
+                            fontFamily: "Montserrat",
+                            fontSize: 14,
+                            color: AppColor.text2,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
 
-                  // Pilihan Size
-                  Row(
-                    children: [
-                      const Text(
-                        "Size",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const Spacer(),
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text("Size Guide"),
-                      ),
-                    ],
+                        SizedBox(height: 150),
+                      ],
+                    ),
                   ),
-                  Wrap(
-                    spacing: 10,
-                    children: ["S", "M", "L", "XL", "XXL"].map((size) {
-                      final isSelected = selectedSize == size;
-                      return ChoiceChip(
-                        label: Text(size),
-                        selected: isSelected,
-                        selectedColor: AppColor.primary,
-                        labelStyle: TextStyle(
-                          color: isSelected ? Colors.white : Colors.black,
-                        ),
-                        onSelected: (_) {
-                          setState(() {
-                            selectedSize = size;
-                          });
-                        },
-                      );
-                    }).toList(),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Deskripsi
-                  const Text(
-                    "Description",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    p.description,
-                    style: const TextStyle(fontSize: 14, color: Colors.black54),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Placeholder untuk review (karena API kamu belum ada review)
-                  const Text(
-                    "Reviews",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    "Belum ada review untuk produk ini.",
-                    style: TextStyle(color: Colors.black54),
-                  ),
-
-                  const SizedBox(height: 80),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
+          ),
 
-      // ====== BOTTOM BUTTON ======
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(16),
-        height: 80,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border(top: BorderSide(color: Colors.grey.shade200)),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          // ==== FIXED PRICE + BUTTON ====
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: const BoxDecoration(color: AppColor.neutral),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text("Total Price"),
-                Text(
-                  formatRupiah(p.price),
-                  style: TextStyle(
-                    fontFamily: "Montserrat",
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: AppColor.primary,
+                // Harga
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Price",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontFamily: "Montserrat",
+                        color: AppColor.text,
+                      ),
+                    ),
+                    Text(
+                      formatRupiah(totalPrice.toString()),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.primary,
+                      ),
+                    ),
+                  ],
+                ),
+
+                // Tombol Add to Cart
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColor.primary,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 40,
+                      vertical: 15,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  onPressed: () {},
+                  child: Text(
+                    "Add to Cart",
+                    style: TextStyle(
+                      fontFamily: "Montserrat",
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ],
             ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColor.primary,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 40,
-                  vertical: 15,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onPressed: () {
-                // TODO: Add to Cart function
-              },
-              child: const Text("Add to Cart"),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

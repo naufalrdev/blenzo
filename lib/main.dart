@@ -1,3 +1,4 @@
+import 'package:blenzo/utils/app_color.dart';
 import 'package:blenzo/views/onboard_screen.dart';
 import 'package:blenzo/views/splash_screen.dart';
 import 'package:blenzo/widgets/botnavbar.dart';
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColor.background),
       ),
 
       debugShowCheckedModeBanner: false,
