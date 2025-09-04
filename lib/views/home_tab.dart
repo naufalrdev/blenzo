@@ -4,7 +4,6 @@ import 'package:blenzo/services/api/product_api.dart';
 import 'package:blenzo/utils/app_color.dart';
 import 'package:blenzo/utils/currency_format.dart';
 import 'package:blenzo/views/all_products.dart';
-import 'package:blenzo/views/product_detail.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
@@ -132,7 +131,7 @@ class _HomeTabState extends State<HomeTab> {
               ),
               GestureDetector(
                 onTap: () {
-                  context.push(AllProductsPage());
+                  context.pushReplacementNamed(AllProductsPage.id);
                 },
                 child: Text("See All", style: TextStyle(color: AppColor.text2)),
               ),
@@ -167,7 +166,7 @@ class _HomeTabState extends State<HomeTab> {
                   final discount = int.tryParse(p.discount ?? "0") ?? 0;
                   return GestureDetector(
                     onTap: () {
-                      context.push(ProductDetailPage(product: p));
+                      // context.push(ProductDetailPage(product: p));
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -213,15 +212,15 @@ class _HomeTabState extends State<HomeTab> {
                                   top: 8,
                                   right: 8,
                                   child: Container(
-                                    padding: const EdgeInsets.all(6),
-                                    decoration: const BoxDecoration(
+                                    padding: EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
                                       color: AppColor.primary,
                                       shape: BoxShape.circle,
                                     ),
                                     child: Text(
                                       "-$discount%",
                                       style: const TextStyle(
-                                        fontSize: 10,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white,
                                       ),
@@ -233,7 +232,7 @@ class _HomeTabState extends State<HomeTab> {
 
                           /// product info
                           Padding(
-                            padding: const EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(12),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -242,24 +241,21 @@ class _HomeTabState extends State<HomeTab> {
                                   p.name,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontFamily: "Montserrat",
-                                    fontSize: 13,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.w600,
                                     color: AppColor.text,
                                   ),
                                 ),
-                                const SizedBox(height: 4),
-
-                                /// rating & review
-                                const SizedBox(height: 6),
+                                SizedBox(height: 10),
 
                                 /// price + discount price
                                 if (discount > 0) ...[
                                   Text(
                                     formatRupiah(p.price),
                                     style: const TextStyle(
-                                      fontSize: 11,
+                                      fontSize: 13,
                                       decoration: TextDecoration.lineThrough,
                                       color: Colors.grey,
                                     ),
@@ -274,8 +270,8 @@ class _HomeTabState extends State<HomeTab> {
                                               .toString(),
                                         )
                                       : formatRupiah(p.price),
-                                  style: const TextStyle(
-                                    fontSize: 13,
+                                  style: TextStyle(
+                                    fontSize: 15,
                                     fontWeight: FontWeight.bold,
                                     color: AppColor.primary,
                                   ),

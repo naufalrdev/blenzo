@@ -1,4 +1,5 @@
 import 'package:blenzo/utils/app_color.dart';
+import 'package:blenzo/views/all_products.dart';
 import 'package:blenzo/views/onboard_screen.dart';
 import 'package:blenzo/views/splash_screen.dart';
 import 'package:blenzo/widgets/botnavbar.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
         SplashScreen.id: (context) => SplashScreen(),
         OnboardScreen.id: (context) => OnboardScreen(),
         BotNavBar1.id: (context) => BotNavBar1(),
+        AllProductsPage.id: (context) => AllProductsPage(),
       },
       // home: LoginScreen(?),
     );
