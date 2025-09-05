@@ -48,7 +48,7 @@ class _BotNavBar1State extends State<BotNavBar1> {
               color: Colors.black,
               tabs: [
                 GButton(icon: LineIcons.home, text: "Home"),
-                GButton(icon: LineIcons.heart, text: "Wishlist"),
+                GButton(icon: LineIcons.shoppingCart, text: "Cart"),
                 GButton(icon: LineIcons.search, text: "Search"),
                 GButton(icon: LineIcons.user, text: "Setting"),
               ],

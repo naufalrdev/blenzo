@@ -4,6 +4,7 @@ import 'package:blenzo/services/api/product_api.dart';
 import 'package:blenzo/utils/app_color.dart';
 import 'package:blenzo/utils/currency_format.dart';
 import 'package:blenzo/views/all_products.dart';
+import 'package:blenzo/views/product_detail.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
@@ -150,23 +151,23 @@ class _HomeTabState extends State<HomeTab> {
               } else if (!snapshot.hasData || snapshot.data!.data.isEmpty) {
                 return const Center(child: Text("No Products found"));
               }
-              final productList = snapshot.data!.data.take(3).toList();
+              final productList = snapshot.data!.data.take(5).toList();
               return GridView.builder(
-                physics: NeverScrollableScrollPhysics(),
+                physics: BouncingScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: productList.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 12,
                   mainAxisSpacing: 12,
-                  childAspectRatio: 0.62,
+                  childAspectRatio: 0.60,
                 ),
                 itemBuilder: (context, index) {
                   final p = productList[index];
                   final discount = int.tryParse(p.discount ?? "0") ?? 0;
                   return GestureDetector(
                     onTap: () {
-                      // context.push(ProductDetailPage(product: p));
+                      context.push(ProductDetailPage(product: p));
                     },
                     child: Container(
                       decoration: BoxDecoration(

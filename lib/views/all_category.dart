@@ -1,5 +1,9 @@
+import 'package:blenzo/extensions/navigations.dart';
 import 'package:blenzo/models/product/get_product.dart';
 import 'package:blenzo/services/api/product_api.dart';
+import 'package:blenzo/utils/app_color.dart';
+import 'package:blenzo/utils/currency_format.dart';
+import 'package:blenzo/views/product_detail.dart';
 import 'package:flutter/material.dart';
 
 class ProductByCategoryPage extends StatefulWidget {
@@ -34,11 +38,12 @@ class _ProductByCategoryPageState extends State<ProductByCategoryPage> {
       final result = await AuthenticationApiProduct.getProduct();
       final products = result.data;
 
-      // filter by kategori
+      //filter by category
       final filtered = products
-        ..where((p) => p.categoryId.toString() == widget.categoryId.toString());
+          .where((p) => p.categoryId.toString() == widget.categoryId.toString())
+          .toList();
 
-      // ambil brand unik (nama saja)
+      // ambil brand unik
       final uniqueBrands = filtered
           .map((p) => p.brand ?? "")
           .where((b) => b.isNotEmpty)
@@ -48,7 +53,7 @@ class _ProductByCategoryPageState extends State<ProductByCategoryPage> {
       setState(() {
         allProducts = filtered;
         displayedProducts = List.from(allProducts);
-        brands = uniqueBrands;
+        brands = ["All", ...uniqueBrands];
         isLoading = false;
       });
     } catch (e) {
@@ -62,7 +67,9 @@ class _ProductByCategoryPageState extends State<ProductByCategoryPage> {
       if (brand == "All") {
         displayedProducts = List.from(allProducts);
       } else {
-        displayedProducts = allProducts.where((p) => p.brand == brand).toList();
+        displayedProducts = allProducts
+            .where((p) => (p.brand ?? "") == brand)
+            .toList();
       }
     });
   }
@@ -70,32 +77,52 @@ class _ProductByCategoryPageState extends State<ProductByCategoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.categoryName)),
+      appBar: AppBar(
+        title: Text(
+          widget.categoryName,
+          style: TextStyle(
+            fontFamily: "Montserrat",
+            fontWeight: FontWeight.w600,
+            color: AppColor.text,
+          ),
+        ),
+        centerTitle: true,
+      ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? Center(child: CircularProgressIndicator())
           : Column(
               children: [
                 // Dropdown filter brand
                 Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: EdgeInsets.all(12.0),
                   child: Row(
                     children: [
-                      const Text(
+                      Text(
                         "Brand: ",
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontFamily: "Montserrat",
+                          color: AppColor.text,
+                        ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       DropdownButton<String>(
                         value: selectedBrand,
-                        items: [
-                          const DropdownMenuItem(
-                            value: "All",
-                            child: Text("All Brands"),
-                          ),
-                          ...brands.map(
-                            (b) => DropdownMenuItem(value: b, child: Text(b)),
-                          ),
-                        ],
+                        items: brands
+                            .map(
+                              (b) => DropdownMenuItem(
+                                value: b,
+                                child: Text(
+                                  b == "All" ? "All Brands" : b,
+                                  style: TextStyle(
+                                    fontFamily: "Montserrat",
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColor.text,
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
                         onChanged: (value) {
                           if (value != null) applyBrandFilter(value);
                         },
@@ -107,72 +134,136 @@ class _ProductByCategoryPageState extends State<ProductByCategoryPage> {
                 // Grid produk
                 Expanded(
                   child: displayedProducts.isEmpty
-                      ? const Center(child: Text("No products found"))
+                      ? Center(child: Text("No products found"))
                       : GridView.builder(
-                          padding: const EdgeInsets.all(12),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
                           gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2, // 2 kolom
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
                                 crossAxisSpacing: 12,
                                 mainAxisSpacing: 12,
-                                childAspectRatio: 0.65,
+                                childAspectRatio: 0.60,
                               ),
                           itemCount: displayedProducts.length,
                           itemBuilder: (context, index) {
-                            final product = displayedProducts[index];
+                            final p = displayedProducts[index];
+                            final discount =
+                                int.tryParse(p.discount ?? "0") ?? 0;
                             return GestureDetector(
-                              onTap: () {},
-                              child: Card(
-                                shape: RoundedRectangleBorder(
+                              onTap: () {
+                                context.push(ProductDetailPage(product: p));
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: AppColor.neutral,
                                   borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.05),
+                                      blurRadius: 6,
+                                      offset: Offset(0, 3),
+                                    ),
+                                  ],
                                 ),
-                                elevation: 2,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    // gambar produk
-                                    ClipRRect(
-                                      borderRadius: const BorderRadius.vertical(
-                                        top: Radius.circular(12),
-                                      ),
-                                      child: Image.network(
-                                        product.imageUrls.isNotEmpty
-                                            ? product.imageUrls[0]
-                                            : "https://via.placeholder.com/150",
-                                        height: 140,
-                                        width: double.infinity,
-                                        fit: BoxFit.cover,
-                                      ),
+                                    /// product image + discount badge
+                                    Stack(
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(12),
+                                          ),
+                                          child: AspectRatio(
+                                            aspectRatio: 1,
+                                            child: p.imageUrls.isNotEmpty
+                                                ? Image.network(
+                                                    p.imageUrls[0],
+                                                    width: double.infinity,
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                : Container(
+                                                    color: Colors.grey[300],
+                                                    child: Icon(
+                                                      Icons.image,
+                                                      size: 50,
+                                                    ),
+                                                  ),
+                                          ),
+                                        ),
+                                        if (discount > 0)
+                                          Positioned(
+                                            top: 8,
+                                            right: 8,
+                                            child: Container(
+                                              padding: EdgeInsets.all(6),
+                                              decoration: BoxDecoration(
+                                                color: AppColor.primary,
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: Text(
+                                                "-$discount%",
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                      ],
                                     ),
+
+                                    /// product info
                                     Padding(
-                                      padding: const EdgeInsets.all(8.0),
+                                      padding: EdgeInsets.all(12),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
+                                          /// name
                                           Text(
-                                            product
-                                                .name, // sebelumnya product.productName
+                                            p.name,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Text(
-                                            product.brand ?? "-", // null safe
                                             style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.grey[600],
+                                              fontFamily: "Montserrat",
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                              color: AppColor.text,
                                             ),
                                           ),
-                                          const SizedBox(height: 6),
+                                          SizedBox(height: 10),
+
+                                          /// price + discount price
+                                          if (discount > 0) ...[
+                                            Text(
+                                              formatRupiah(p.price),
+                                              style: TextStyle(
+                                                fontSize: 13,
+                                                decoration:
+                                                    TextDecoration.lineThrough,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ],
                                           Text(
-                                            "Rp ${product.price}",
-                                            style: const TextStyle(
+                                            discount > 0
+                                                ? formatRupiah(
+                                                    (int.parse(p.price) *
+                                                            (100 - discount) ~/
+                                                            100)
+                                                        .toString(),
+                                                  )
+                                                : formatRupiah(p.price),
+                                            style: TextStyle(
+                                              fontSize: 15,
                                               fontWeight: FontWeight.bold,
-                                              color: Colors.green,
+                                              color: AppColor.primary,
                                             ),
                                           ),
                                         ],

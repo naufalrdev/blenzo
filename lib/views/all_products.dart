@@ -45,30 +45,34 @@ class _AllProductsPageState extends State<AllProductsPage> {
         future: futureProduct,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Center(
+              child: CircularProgressIndicator(color: AppColor.primary),
+            );
           } else if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}"));
           } else if (!snapshot.hasData || snapshot.data!.data.isEmpty) {
             return Center(child: Text("No Products found"));
           }
 
-          var productList = snapshot.data!.data;
+          var productList = List<Datum>.from(snapshot.data!.data);
 
           // filter by search
           if (query.isNotEmpty) {
             productList = productList
-                .where((p) => p.name.toLowerCase().contains(query))
+                .where((p) => (p.name ?? "").toLowerCase().contains(query))
                 .toList();
           }
 
           // filter by harga
           if (selectedFilter == "Lowest") {
             productList.sort(
-              (a, b) => int.parse(a.price).compareTo(int.parse(b.price)),
+              (a, b) =>
+                  (int.parse(a.price) ?? 0).compareTo(int.parse(b.price) ?? 0),
             );
           } else if (selectedFilter == "Highest") {
             productList.sort(
-              (a, b) => int.parse(b.price).compareTo(int.parse(a.price)),
+              (a, b) =>
+                  (int.parse(b.price) ?? 0).compareTo(int.parse(a.price) ?? 0),
             );
           }
 
@@ -76,7 +80,7 @@ class _AllProductsPageState extends State<AllProductsPage> {
             children: [
               // Search box
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: TextField(
                   decoration: InputDecoration(
                     hintText: "Search any Products...",
@@ -130,9 +134,11 @@ class _AllProductsPageState extends State<AllProductsPage> {
                         ),
                       ],
                       onChanged: (value) {
-                        setState(() {
-                          selectedFilter = value!;
-                        });
+                        if (value != null) {
+                          setState(() {
+                            selectedFilter = value;
+                          });
+                        }
                       },
                     ),
                   ],
@@ -142,13 +148,13 @@ class _AllProductsPageState extends State<AllProductsPage> {
               // Produk list
               Expanded(
                 child: GridView.builder(
-                  padding: EdgeInsets.all(12),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   itemCount: productList.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     crossAxisSpacing: 12,
                     mainAxisSpacing: 12,
-                    childAspectRatio: 0.62,
+                    childAspectRatio: 0.60,
                   ),
                   itemBuilder: (context, index) {
                     final p = productList[index];

@@ -1,14 +1,14 @@
 String getCategoryAsset(String categoryName) {
   switch (categoryName.toLowerCase()) {
-    case "baju":
+    case "shirt":
       return "assets/images/shirt.png";
-    case "sepatu":
+    case "shoes":
       return "assets/images/shoes.png";
-    case "tas":
+    case "bag":
       return "assets/images/bag.png";
-    case "topi":
+    case "cap":
       return "assets/images/topi_removebg.png";
-    case "celana":
+    case "pants":
       return "assets/images/celana_removebg.png";
     default:
       return "assets/images/logo_default.png";

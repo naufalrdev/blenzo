@@ -1,3 +1,4 @@
+import 'package:blenzo/extensions/navigations.dart';
 import 'package:blenzo/models/categories/get_categories.dart';
 import 'package:blenzo/services/api/categories_api.dart';
 import 'package:blenzo/utils/app_color.dart';
@@ -25,7 +26,7 @@ class _CategoryTabState extends State<CategoryTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.background,
-      body: FutureBuilder(
+      body: FutureBuilder<GetCatModel>(
         future: futureCategory,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -44,54 +45,51 @@ class _CategoryTabState extends State<CategoryTab> {
             itemCount: categories.length,
             itemBuilder: (context, index) {
               final cat = categories[index];
-              final assetPath = getCategoryAsset(cat.name);
+              final assetPath = getCategoryAsset(cat.name ?? "");
+              Text(cat.name ?? "");
               return GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => ProductByCategoryPage(
-                        categoryId: cat.id,
-                        categoryName: cat.name,
-                      ),
-                    ),
-                  );
-                  child:
-                  Container(
-                    height: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      image: DecorationImage(
-                        image: AssetImage(assetPath),
-                        fit: BoxFit.cover,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 6,
-                          offset: Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: Colors.black.withOpacity(0.4),
-                      ),
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(
-                        cat.name,
-                        style: TextStyle(
-                          fontFamily: "Montserrat",
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: AppColor.neutral,
-                        ),
-                      ),
+                  context.push(
+                    ProductByCategoryPage(
+                      categoryId: cat.id,
+                      categoryName: cat.name,
                     ),
                   );
                 },
+                child: Container(
+                  height: 100,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    image: DecorationImage(
+                      image: AssetImage(assetPath),
+                      fit: BoxFit.cover,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 6,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.black.withOpacity(0.4),
+                    ),
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      cat.name,
+                      style: TextStyle(
+                        fontFamily: "Montserrat",
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: AppColor.neutral,
+                      ),
+                    ),
+                  ),
+                ),
               );
             },
           );
