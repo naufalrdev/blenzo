@@ -1,6 +1,8 @@
 import 'package:blenzo/extensions/navigations.dart';
 import 'package:blenzo/models/product/get_product.dart';
+import 'package:blenzo/models/brand/get_brand.dart'; // ⬅️ tambahkan
 import 'package:blenzo/services/api/product_api.dart';
+import 'package:blenzo/services/api/brand_api.dart'; // ⬅️ tambahkan
 import 'package:blenzo/utils/app_color.dart';
 import 'package:blenzo/utils/currency_format.dart';
 import 'package:blenzo/views/product_detail.dart';
@@ -27,23 +29,28 @@ class _ProductByCategoryPageState extends State<ProductByCategoryPage> {
   String selectedBrand = "All";
   bool isLoading = true;
 
+  /// simpan logo brand dari API
+  Map<String, String?> brandLogos = {}; // name → imageUrl
+
   @override
   void initState() {
     super.initState();
     fetchProductsByCategory();
+    fetchBrands();
   }
 
+  /// ambil produk by kategori
   Future<void> fetchProductsByCategory() async {
     try {
       final result = await AuthenticationApiProduct.getProduct();
       final products = result.data;
 
-      //filter by category
+      // filter by category
       final filtered = products
           .where((p) => p.categoryId.toString() == widget.categoryId.toString())
           .toList();
 
-      // ambil brand unik
+      // ambil brand unik dari produk
       final uniqueBrands = filtered
           .map((p) => p.brand ?? "")
           .where((b) => b.isNotEmpty)
@@ -58,6 +65,20 @@ class _ProductByCategoryPageState extends State<ProductByCategoryPage> {
       });
     } catch (e) {
       setState(() => isLoading = false);
+    }
+  }
+
+  /// ambil data brand (logo)
+  Future<void> fetchBrands() async {
+    try {
+      final result = await AuthenticationApiBrand.getBrand();
+      final brandData = result.data;
+
+      setState(() {
+        brandLogos = {for (var b in brandData) b.name: b.imageUrl};
+      });
+    } catch (e) {
+      print("Error fetchBrands: $e");
     }
   }
 
@@ -91,43 +112,48 @@ class _ProductByCategoryPageState extends State<ProductByCategoryPage> {
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Dropdown filter brand
-                Padding(
-                  padding: EdgeInsets.all(12.0),
-                  child: Row(
-                    children: [
-                      Text(
-                        "Brand: ",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontFamily: "Montserrat",
-                          color: AppColor.text,
+                // Brand filter pakai ChoiceChip + Logo
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  child: Wrap(
+                    spacing: 8,
+                    runSpacing: 6,
+                    children: brands.map((brand) {
+                      final isSelected = selectedBrand == brand;
+                      final logo = brandLogos[brand];
+
+                      return ChoiceChip(
+                        avatar:
+                            (logo != null && logo.isNotEmpty && brand != "All")
+                            ? CircleAvatar(
+                                backgroundImage: NetworkImage(logo),
+                                backgroundColor: Colors.transparent,
+                              )
+                            : null,
+                        label: Text(
+                          brand == "All" ? "All Brands" : brand,
+                          style: TextStyle(
+                            fontFamily: "Montserrat",
+                            fontWeight: FontWeight.w500,
+                            color: isSelected ? Colors.white : AppColor.text,
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 8),
-                      DropdownButton<String>(
-                        value: selectedBrand,
-                        items: brands
-                            .map(
-                              (b) => DropdownMenuItem(
-                                value: b,
-                                child: Text(
-                                  b == "All" ? "All Brands" : b,
-                                  style: TextStyle(
-                                    fontFamily: "Montserrat",
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColor.text,
-                                  ),
-                                ),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (value) {
-                          if (value != null) applyBrandFilter(value);
-                        },
-                      ),
-                    ],
+                        selected: isSelected,
+                        selectedColor: AppColor.primary,
+                        backgroundColor: Colors.white,
+                        shape: StadiumBorder(
+                          side: BorderSide(
+                            color: isSelected
+                                ? AppColor.primary
+                                : Colors.grey.shade300,
+                          ),
+                        ),
+                        onSelected: (_) => applyBrandFilter(brand),
+                      );
+                    }).toList(),
                   ),
                 ),
 
