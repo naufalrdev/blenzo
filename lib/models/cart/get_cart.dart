@@ -29,14 +29,16 @@ class GetCartModel {
 class GetCart {
   int id;
   Product product;
-  int quantity; // ✅ ubah ke int
+  int quantity;
   int subtotal;
+  bool selected;
 
   GetCart({
     required this.id,
     required this.product,
     required this.quantity,
     required this.subtotal,
+    this.selected = false,
   });
 
   factory GetCart.fromJson(Map<String, dynamic> json) => GetCart(

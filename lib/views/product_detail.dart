@@ -1,10 +1,9 @@
-import 'package:blenzo/models/checkout/add_checkout.dart';
+import 'package:blenzo/extensions/navigations.dart';
 import 'package:blenzo/models/product/get_product.dart';
 import 'package:blenzo/services/api/cart_api.dart';
-import 'package:blenzo/services/api/checkout_api.dart';
-import 'package:blenzo/services/local/shared_prefs_service.dart';
 import 'package:blenzo/utils/app_color.dart';
 import 'package:blenzo/utils/currency_format.dart';
+import 'package:blenzo/views/cart_screen.dart';
 import 'package:flutter/material.dart';
 
 class ProductDetailPage extends StatefulWidget {
@@ -18,6 +17,24 @@ class ProductDetailPage extends StatefulWidget {
 
 class _ProductDetailPageState extends State<ProductDetailPage> {
   int quantity = 1;
+  int cartCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchCartCount();
+  }
+
+  Future<void> fetchCartCount() async {
+    try {
+      final cart = await AuthenticationApiCart.getCart();
+      setState(() {
+        cartCount = cart.data.length; // jumlah item di keranjang
+      });
+    } catch (e) {
+      print("Error get cart: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +61,33 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             onPressed: () {},
           ),
           IconButton(
-            icon: const Icon(Icons.shopping_cart_outlined, color: Colors.black),
-            onPressed: () {},
+            icon: Stack(
+              children: [
+                const Icon(Icons.shopping_cart_outlined, color: Colors.black),
+                if (cartCount > 0) // cartCount dari state
+                  Positioned(
+                    right: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: const BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Text(
+                        cartCount.toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            onPressed: () {
+              context.push(CartPage());
+            },
           ),
         ],
       ),
@@ -213,50 +255,26 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   ),
                   onPressed: () async {
                     try {
-                      // Ambil userId langsung sebagai int
-                      final userId = await PreferenceHandler.getUserId();
-                      if (userId == null) {
-                        if (!mounted) return;
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("The user is not logged in"),
-                          ),
-                        );
-                        return;
-                      }
+                      final result = await AuthenticationApiCart.addCart(
+                        productId: widget.product.id,
+                        quantity: quantity,
+                      );
 
-                      final response =
-                          await AuthenticationApiCheckOut.addCheckout(
-                            userId: userId, // sudah int
-                            items: [
-                              Item(
-                                product: BuyNow(
-                                  id: p.id,
-                                  name: p.name,
-                                  price: p.price,
-                                ),
-                                quantity: quantity.toString(),
-                              ),
-                            ],
-                            total: totalPrice,
-                          );
-
-                      if (!mounted) return;
+                      await fetchCartCount();
                       ScaffoldMessenger.of(
                         context,
-                      ).showSnackBar(SnackBar(content: Text(response.message)));
+                      ).showSnackBar(SnackBar(content: Text(result.message)));
                     } catch (e) {
-                      if (!mounted) return;
-                      print("❌ Error saat checkout: $e");
-
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text("Error: $e")));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Gagal menambahkan ke keranjang: $e"),
+                        ),
+                      );
                     }
                   },
 
                   child: Text(
-                    "Buy Now",
+                    "Add to cart",
                     style: TextStyle(
                       fontFamily: "Montserrat",
                       fontWeight: FontWeight.bold,
