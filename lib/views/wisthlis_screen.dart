@@ -30,6 +30,8 @@ class _WistListScreenState extends State<WistListScreen> {
                 ),
               ),
               onPressed: () {
+                PreferenceHandler.removeUserId();
+                PreferenceHandler.removeToken();
                 PreferenceHandler.removeLogin();
                 context.pushReplacement(OnboardScreen());
               },

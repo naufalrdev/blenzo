@@ -1,4 +1,8 @@
+import 'package:blenzo/models/checkout/add_checkout.dart';
 import 'package:blenzo/models/product/get_product.dart';
+import 'package:blenzo/services/api/cart_api.dart';
+import 'package:blenzo/services/api/checkout_api.dart';
+import 'package:blenzo/services/local/shared_prefs_service.dart';
 import 'package:blenzo/utils/app_color.dart';
 import 'package:blenzo/utils/currency_format.dart';
 import 'package:flutter/material.dart';
@@ -207,9 +211,52 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () async {
+                    try {
+                      // Ambil userId langsung sebagai int
+                      final userId = await PreferenceHandler.getUserId();
+                      if (userId == null) {
+                        if (!mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("The user is not logged in"),
+                          ),
+                        );
+                        return;
+                      }
+
+                      final response =
+                          await AuthenticationApiCheckOut.addCheckout(
+                            userId: userId, // sudah int
+                            items: [
+                              Item(
+                                product: BuyNow(
+                                  id: p.id,
+                                  name: p.name,
+                                  price: p.price,
+                                ),
+                                quantity: quantity.toString(),
+                              ),
+                            ],
+                            total: totalPrice,
+                          );
+
+                      if (!mounted) return;
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(response.message)));
+                    } catch (e) {
+                      if (!mounted) return;
+                      print("❌ Error saat checkout: $e");
+
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text("Error: $e")));
+                    }
+                  },
+
                   child: Text(
-                    "Add to Cart",
+                    "Buy Now",
                     style: TextStyle(
                       fontFamily: "Montserrat",
                       fontWeight: FontWeight.bold,

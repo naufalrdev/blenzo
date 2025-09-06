@@ -38,7 +38,9 @@ class _LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Email and Password cannot be empty")),
       );
-      isLoading = false;
+      setState(() {
+        isLoading = false;
+      });
       return;
     }
     try {
@@ -49,11 +51,17 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         user = results;
       });
+
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text("Login successful")));
-      PreferenceHandler.saveToken(user?.data.token.toString() ?? "");
+
+      await PreferenceHandler.saveToken(user?.data.token.toString() ?? "");
+      final savedUserId = await PreferenceHandler.getUserId();
+      print("Saved User Id: $savedUserId");
+
       context.pushReplacement(BotNavBar1());
+
       print(user?.toJson());
     } catch (e) {
       print(e);
@@ -64,8 +72,9 @@ class _LoginScreenState extends State<LoginScreen> {
         context,
       ).showSnackBar(SnackBar(content: Text(errorMessage.toString())));
     } finally {
-      setState(() {});
-      isLoading = false;
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 

@@ -40,6 +40,9 @@ class AuthenticationAPIUser {
       final data = RegistUserModel.fromJson(json.decode(response.body));
       await PreferenceHandler.saveToken(data.data.token);
       await PreferenceHandler.saveLogin();
+      await PreferenceHandler.saveUserId(data.data.user.id);
+      print("UserId saved: ${data.data.user.id}");
+
       return data;
     } else {
       final error = json.decode(response.body);
