@@ -4,6 +4,7 @@ import 'package:blenzo/services/api/cart_api.dart';
 import 'package:blenzo/utils/app_color.dart';
 import 'package:blenzo/utils/currency_format.dart';
 import 'package:blenzo/views/cart_screen.dart';
+import 'package:blenzo/views/cart_screen2.dart';
 import 'package:flutter/material.dart';
 
 class ProductDetailPage extends StatefulWidget {
@@ -70,7 +71,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     child: Container(
                       padding: const EdgeInsets.all(4),
                       decoration: const BoxDecoration(
-                        color: Colors.red,
+                        color: AppColor.primary,
                         shape: BoxShape.circle,
                       ),
                       child: Text(
@@ -86,7 +87,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               ],
             ),
             onPressed: () {
-              context.push(CartPage());
+              context.push(CartPage2());
             },
           ),
         ],

@@ -31,14 +31,14 @@ class GetCart {
   Product product;
   int quantity;
   int subtotal;
-  bool selected;
+  // bool selected;
 
   GetCart({
     required this.id,
     required this.product,
     required this.quantity,
     required this.subtotal,
-    this.selected = false,
+    // this.selected = false,
   });
 
   factory GetCart.fromJson(Map<String, dynamic> json) => GetCart(

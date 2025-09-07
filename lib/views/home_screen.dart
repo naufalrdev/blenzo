@@ -88,20 +88,14 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
                     ],
                   ),
-                  Row(
-                    children: [
-                      Icon(Icons.notifications_none, size: 26),
-                      SizedBox(width: 16),
-                      Icon(Icons.shopping_cart_outlined, size: 20),
-                    ],
-                  ),
+                  Row(children: [Icon(Icons.notifications_none, size: 26)]),
                 ],
               ),
             ),
             TabBar(
               controller: tabController,
               labelColor: AppColor.primary,
-              unselectedLabelColor: Colors.grey,
+              unselectedLabelColor: AppColor.text2,
               indicatorColor: AppColor.primary,
               tabs: [
                 Tab(text: "Home"),
