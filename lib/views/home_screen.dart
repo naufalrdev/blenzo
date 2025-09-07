@@ -2,8 +2,8 @@ import 'package:blenzo/models/user/get_user.dart';
 import 'package:blenzo/services/api/user_api.dart';
 import 'package:blenzo/utils/app_color.dart';
 import 'package:blenzo/utils/app_image.dart';
-import 'package:blenzo/views/category_tab.dart';
-import 'package:blenzo/views/home_tab.dart';
+import 'package:blenzo/widgets/category_tab.dart';
+import 'package:blenzo/widgets/home_tab.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {

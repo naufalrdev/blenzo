@@ -2,6 +2,7 @@ import 'package:blenzo/extensions/navigations.dart';
 import 'package:blenzo/models/checkout/add_checkout.dart';
 import 'package:blenzo/services/api/checkout_api.dart';
 import 'package:blenzo/services/local/shared_prefs_service.dart';
+import 'package:blenzo/utils/get_discount.dart';
 import 'package:flutter/material.dart';
 import 'package:blenzo/models/cart/get_cart.dart';
 import 'package:blenzo/services/api/cart_api.dart';
@@ -236,15 +237,6 @@ class _CartPage2State extends State<CartPage2> {
       sum += getDiscountedPrice(item.product) * item.quantity;
     }
     return sum;
-  }
-
-  int getDiscountedPrice(Product product) {
-    final int price = int.tryParse(product.price) ?? 0;
-    final int discount = int.tryParse(product.discount) ?? 0;
-    if (discount > 0) {
-      return price - ((price * discount) ~/ 100);
-    }
-    return price;
   }
 
   void showCheckoutBottomSheet() {
