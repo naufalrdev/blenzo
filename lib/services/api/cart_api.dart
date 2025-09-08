@@ -46,8 +46,8 @@ class AuthenticationApiCart {
     }
   }
 
-  static Future<DeleteModel> deleteCart({required int CartId}) async {
-    final url = Uri.parse("${Endpoint.cart}/$CartId");
+  static Future<DeleteModel> deleteCart({required int cartId}) async {
+    final url = Uri.parse("${Endpoint.cart}/$cartId");
     final token = await PreferenceHandler.getToken();
 
     final response = await http.delete(

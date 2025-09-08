@@ -136,7 +136,7 @@ class _CartPage2State extends State<CartPage2> {
     if (confirm != true) return;
 
     try {
-      await AuthenticationApiCart.deleteCart(CartId: cartId);
+      await AuthenticationApiCart.deleteCart(cartId: cartId);
       setState(() {
         cartItems.removeWhere((item) => item.id == cartId);
       });
@@ -213,7 +213,7 @@ class _CartPage2State extends State<CartPage2> {
 
     try {
       for (var item in List.from(cartItems)) {
-        await AuthenticationApiCart.deleteCart(CartId: item.id);
+        await AuthenticationApiCart.deleteCart(cartId: item.id);
       }
       if (!mounted) return;
       setState(() {

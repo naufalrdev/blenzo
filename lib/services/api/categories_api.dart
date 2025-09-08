@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:blenzo/models/categories/add_categories.dart';
 import 'package:blenzo/models/categories/get_categories.dart';
+import 'package:blenzo/models/delete_model.dart';
 import 'package:blenzo/services/api/endpoint/api_endpoint.dart';
 import 'package:blenzo/services/local/shared_prefs_service.dart';
 import 'package:http/http.dart' as http;
@@ -25,8 +26,11 @@ class AuthenticationApiCat {
     }
   }
 
-  static Future<GetCatModel> updateCategories({required String name}) async {
-    final url = Uri.parse(Endpoint.categories);
+  static Future<AddCategoriesModel> updateCategories({
+    required int id,
+    required String name,
+  }) async {
+    final url = Uri.parse("${Endpoint.categories}/$id");
     final token = await PreferenceHandler.getToken();
     final response = await http.put(
       url,
@@ -34,7 +38,7 @@ class AuthenticationApiCat {
       headers: {"Accept": "application/json", "Authorization": "Bearer $token"},
     );
     if (response.statusCode == 200) {
-      return GetCatModel.fromJson(json.decode(response.body));
+      return AddCategoriesModel.fromJson(json.decode(response.body));
     } else {
       final error = json.decode(response.body);
       throw Exception(error["message"] ?? "Data is not valid");
@@ -53,6 +57,25 @@ class AuthenticationApiCat {
     } else {
       final error = json.decode(response.body);
       throw Exception(error["message"] ?? "Get data is not valid");
+    }
+  }
+
+  static Future<DeleteModel> deleteCategories({
+    required int categoriesId,
+  }) async {
+    final url = Uri.parse("${Endpoint.brands}/$categoriesId");
+    final token = await PreferenceHandler.getToken();
+
+    final response = await http.delete(
+      url,
+      headers: {"Accept": "application/json", "Authorization": "Bearer $token"},
+    );
+
+    if (response.statusCode == 200) {
+      return DeleteModel.fromJson(json.decode(response.body));
+    } else {
+      final error = json.decode(response.body);
+      throw Exception(error["message"] ?? "Failed to delete categories");
     }
   }
 }
