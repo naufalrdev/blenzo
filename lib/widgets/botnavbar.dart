@@ -1,7 +1,7 @@
 import 'package:blenzo/utils/app_color.dart';
 import 'package:blenzo/views/home_screen.dart';
 import 'package:blenzo/views/review_screen.dart';
-import 'package:blenzo/views/wisthlis_screen.dart';
+import 'package:blenzo/views/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
@@ -19,8 +19,7 @@ class _BotNavBar1State extends State<BotNavBar1> {
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     ReviewScreen(),
-    Center(child: Text("Halaman 3")),
-    Center(child: Text("Halaman 4")),
+    SettingScreen(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -50,7 +49,6 @@ class _BotNavBar1State extends State<BotNavBar1> {
               tabs: [
                 GButton(icon: LineIcons.home, text: "Home"),
                 GButton(icon: LineIcons.shoppingCart, text: "Cart"),
-                GButton(icon: LineIcons.search, text: "Search"),
                 GButton(icon: LineIcons.user, text: "Setting"),
               ],
             ),

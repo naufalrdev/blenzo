@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:blenzo/models/brand/add_brand.dart';
 import 'package:blenzo/models/brand/get_brand.dart';
@@ -9,15 +10,22 @@ import 'package:http/http.dart' as http;
 class AuthenticationApiBrand {
   static Future<AddBrandModel> addBrand({
     required String name,
-    required String base64Image,
+    required File image,
   }) async {
     final url = Uri.parse(Endpoint.brands);
     final token = await PreferenceHandler.getToken();
+    final readImage = image.readAsBytesSync();
+    final b64 = base64Encode(readImage);
     final response = await http.post(
       url,
-      body: {"name": name, "image": base64Image},
+      body: {"name": name, "image": b64},
       headers: {"Accept": "application/json", "Authorization": "Bearer $token"},
     );
+    print(image);
+    print(readImage);
+    print(b64);
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200) {
       return AddBrandModel.fromJson(json.decode(response.body));
     } else {

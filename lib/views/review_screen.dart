@@ -1,6 +1,6 @@
 import 'package:blenzo/utils/app_color.dart';
-import 'package:blenzo/views/my_reviews.dart';
-import 'package:blenzo/views/to_rate_tab.dart';
+import 'package:blenzo/widgets/my_reviews.dart';
+import 'package:blenzo/widgets/to_rate_tab.dart';
 import 'package:flutter/material.dart';
 
 class ReviewScreen extends StatefulWidget {
@@ -47,7 +47,14 @@ class _ReviewScreenState extends State<ReviewScreen>
       ),
       body: TabBarView(
         controller: tabController,
-        children: [ToRateTab(), MyReviews()],
+        children: [
+          ToRateTab(
+            onReviewed: (goods) {
+              setState(() {});
+            },
+          ),
+          MyReviewsTab(),
+        ],
       ),
     );
   }

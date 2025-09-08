@@ -43,6 +43,7 @@ dependencies:
   carousel_slider: ^5.1.1
   intl: ^0.20.2
   image_picker: ^1.2.0
+  flutter_rating: ^2.0.2
 
 dev_dependencies:
   flutter_test:
