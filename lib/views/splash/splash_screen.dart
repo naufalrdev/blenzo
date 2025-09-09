@@ -2,7 +2,7 @@ import 'package:blenzo/extensions/navigations.dart';
 import 'package:blenzo/services/local/shared_prefs_service.dart';
 import 'package:blenzo/utils/app_color.dart';
 import 'package:blenzo/utils/app_image.dart';
-import 'package:blenzo/views/onboard_screen.dart';
+import 'package:blenzo/views/auth/onboard_screen.dart';
 import 'package:blenzo/widgets/botnavbar.dart';
 import 'package:flutter/material.dart';
 

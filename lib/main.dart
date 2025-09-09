@@ -1,7 +1,7 @@
 import 'package:blenzo/utils/app_color.dart';
-import 'package:blenzo/views/all_products.dart';
-import 'package:blenzo/views/onboard_screen.dart';
-import 'package:blenzo/views/splash_screen.dart';
+import 'package:blenzo/views/product/all_products.dart';
+import 'package:blenzo/views/auth/onboard_screen.dart';
+import 'package:blenzo/views/splash/splash_screen.dart';
 import 'package:blenzo/widgets/botnavbar.dart';
 import 'package:flutter/material.dart';
 

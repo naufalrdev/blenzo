@@ -58,7 +58,7 @@ class ProductCard extends StatelessWidget {
                 Text(
                   "Rp ${product.price}",
                   style: const TextStyle(
-                    color: Colors.green,
+                    color: AppColor.primary,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

@@ -12,14 +12,14 @@ String getHistoryModelToJson(GetHistoryModel data) =>
 
 class GetHistoryModel {
   String message;
-  List<Kultum> data;
+  List<History> data;
 
   GetHistoryModel({required this.message, required this.data});
 
   factory GetHistoryModel.fromJson(Map<String, dynamic> json) =>
       GetHistoryModel(
         message: json["message"],
-        data: List<Kultum>.from(json["data"].map((x) => Kultum.fromJson(x))),
+        data: List<History>.from(json["data"].map((x) => History.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -28,24 +28,24 @@ class GetHistoryModel {
   };
 }
 
-class Kultum {
+class History {
   int id;
   String total;
   DateTime createdAt;
-  List<Goods> items;
+  List<Kultum> items;
 
-  Kultum({
+  History({
     required this.id,
     required this.total,
     required this.createdAt,
     required this.items,
   });
 
-  factory Kultum.fromJson(Map<String, dynamic> json) => Kultum(
+  factory History.fromJson(Map<String, dynamic> json) => History(
     id: json["id"],
     total: json["total"],
     createdAt: DateTime.parse(json["created_at"]),
-    items: List<Goods>.from(json["items"].map((x) => Goods.fromJson(x))),
+    items: List<Kultum>.from(json["items"].map((x) => Kultum.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -56,19 +56,19 @@ class Kultum {
   };
 }
 
-class Goods {
-  Product product;
+class Kultum {
+  Goods product;
   String quantity;
   bool hasReviewed;
 
-  Goods({
+  Kultum({
     required this.product,
     required this.quantity,
     required this.hasReviewed,
   });
 
-  factory Goods.fromJson(Map<String, dynamic> json) => Goods(
-    product: Product.fromJson(json["product"]),
+  factory Kultum.fromJson(Map<String, dynamic> json) => Kultum(
+    product: Goods.fromJson(json["product"]),
     quantity: json["quantity"],
     hasReviewed: json["has_reviewed"],
   );
@@ -80,15 +80,30 @@ class Goods {
   };
 }
 
-class Product {
+class Goods {
   int id;
   String name;
   String price;
+  List<String> imageUrls;
 
-  Product({required this.id, required this.name, required this.price});
+  Goods({
+    required this.id,
+    required this.name,
+    required this.price,
+    required this.imageUrls,
+  });
 
-  factory Product.fromJson(Map<String, dynamic> json) =>
-      Product(id: json["id"], name: json["name"], price: json["price"]);
+  factory Goods.fromJson(Map<String, dynamic> json) => Goods(
+    id: json["id"],
+    name: json["name"],
+    price: json["price"],
+    imageUrls: List<String>.from(json["image_urls"].map((x) => x)),
+  );
 
-  Map<String, dynamic> toJson() => {"id": id, "name": name, "price": price};
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "name": name,
+    "price": price,
+    "image_urls": List<dynamic>.from(imageUrls.map((x) => x)),
+  };
 }

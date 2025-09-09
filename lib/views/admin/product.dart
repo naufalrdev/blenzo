@@ -1,11 +1,12 @@
 import 'package:blenzo/models/product/add_product.dart';
+import 'package:blenzo/utils/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:blenzo/models/product/get_product.dart';
 import 'package:blenzo/services/api/product_api.dart';
 import 'package:blenzo/services/api/categories_api.dart';
 import 'package:blenzo/services/api/brand_api.dart';
-import 'package:blenzo/widgets/product_card.dart';
-import 'package:blenzo/widgets/product_form_dialog.dart';
+import 'package:blenzo/widgets/product/product_card.dart';
+import 'package:blenzo/widgets/product/product_form_dialog.dart';
 
 class ProductListScreen extends StatefulWidget {
   const ProductListScreen({super.key});
@@ -88,7 +89,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
       brand: product.brand ?? "",
       brandId: int.tryParse(product.brandId ?? "0") ?? 0,
       imageUrls: product.imageUrls ?? [],
-      imagePaths: [], // kosongkan karena ini hanya untuk upload file baru
+      imagePaths: [],
     );
 
     final result = await showProductFormDialog(
@@ -103,21 +104,65 @@ class _ProductListScreenState extends State<ProductListScreen> {
   }
 
   Future<void> _deleteProduct(int id) async {
+    final confirm =
+        await showDialog<bool>(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text("Konfirmasi Hapus"),
+              content: const Text(
+                "Apakah Anda yakin ingin menghapus produk ini?",
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: const Text("Batal"),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  onPressed: () => Navigator.pop(context, true),
+                  child: const Text("Hapus"),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
+
+    if (!confirm) return;
+
     try {
       await AuthenticationApiProduct.deleteProduct(productId: id);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Produk berhasil dihapus")),
+        );
+      }
       _loadProducts();
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Gagal menghapus produk: $e")));
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Gagal menghapus produk: $e")));
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.background,
       appBar: AppBar(
-        title: Text("Daftar Produk"),
+        backgroundColor: AppColor.background,
+        title: Text(
+          "List of Product",
+          style: TextStyle(
+            fontFamily: "Montserrat",
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        centerTitle: true,
         actions: [IconButton(onPressed: _showAddDialog, icon: Icon(Icons.add))],
       ),
       body: _loading

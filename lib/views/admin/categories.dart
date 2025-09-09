@@ -1,6 +1,7 @@
 import 'package:blenzo/models/categories/get_categories.dart';
 import 'package:blenzo/services/api/categories_api.dart';
-import 'package:blenzo/widgets/categories_form_dialog.dart';
+import 'package:blenzo/utils/app_color.dart';
+import 'package:blenzo/widgets/categories/categories_form_dialog.dart';
 import 'package:flutter/material.dart';
 
 class CategoriesListScreen extends StatefulWidget {
@@ -90,8 +91,17 @@ class _CategoriesListScreenState extends State<CategoriesListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.background,
       appBar: AppBar(
-        title: const Text("Categories"),
+        backgroundColor: AppColor.background,
+        centerTitle: true,
+        title: const Text(
+          "Categories",
+          style: TextStyle(
+            fontFamily: "Montserrat",
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         actions: [
           IconButton(icon: const Icon(Icons.add), onPressed: _addCategory),
         ],

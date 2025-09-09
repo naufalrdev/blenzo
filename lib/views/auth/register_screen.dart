@@ -3,7 +3,7 @@ import 'package:blenzo/models/user/regist_user.dart';
 import 'package:blenzo/services/api/user_api.dart';
 import 'package:blenzo/services/local/shared_prefs_service.dart';
 import 'package:blenzo/utils/app_color.dart';
-import 'package:blenzo/views/login_screen.dart';
+import 'package:blenzo/views/auth/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatefulWidget {

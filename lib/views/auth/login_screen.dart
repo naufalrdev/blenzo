@@ -3,7 +3,7 @@ import 'package:blenzo/models/user/regist_user.dart';
 import 'package:blenzo/services/api/user_api.dart';
 import 'package:blenzo/services/local/shared_prefs_service.dart';
 import 'package:blenzo/utils/app_color.dart';
-import 'package:blenzo/views/register_screen.dart';
+import 'package:blenzo/views/auth/register_screen.dart';
 import 'package:blenzo/widgets/botnavbar.dart';
 import 'package:flutter/material.dart';
 
@@ -28,6 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void loginUser() async {
+    if (!mounted) return;
     setState(() {
       isLoading = true;
       errorMessage = null;
@@ -35,9 +36,11 @@ class _LoginScreenState extends State<LoginScreen> {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
     if (email.isEmpty || password.isEmpty) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Email and Password cannot be empty")),
       );
+      if (!mounted) return;
       setState(() {
         isLoading = false;
       });
@@ -48,10 +51,12 @@ class _LoginScreenState extends State<LoginScreen> {
         email: email,
         password: password,
       );
+      if (!mounted) return;
       setState(() {
         user = results;
       });
 
+      if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text("Login successful")));
@@ -60,18 +65,20 @@ class _LoginScreenState extends State<LoginScreen> {
       final savedUserId = await PreferenceHandler.getUserId();
       print("Saved User Id: $savedUserId");
 
+      if (!mounted) return;
       context.pushReplacement(BotNavBar1());
-
-      print(user?.toJson());
     } catch (e) {
       print(e);
+      if (!mounted) return;
       setState(() {
         errorMessage = e.toString();
       });
+      if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(errorMessage.toString())));
     } finally {
+      if (!mounted) return;
       setState(() {
         isLoading = false;
       });

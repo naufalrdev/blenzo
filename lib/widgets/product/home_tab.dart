@@ -3,8 +3,8 @@ import 'package:blenzo/models/product/get_product.dart';
 import 'package:blenzo/services/api/product_api.dart';
 import 'package:blenzo/utils/app_color.dart';
 import 'package:blenzo/utils/currency_format.dart';
-import 'package:blenzo/views/all_products.dart';
-import 'package:blenzo/views/product_detail.dart';
+import 'package:blenzo/views/product/all_products.dart';
+import 'package:blenzo/views/product/product_detail.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 

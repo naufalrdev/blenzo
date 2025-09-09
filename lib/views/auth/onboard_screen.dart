@@ -1,6 +1,6 @@
 import 'package:blenzo/extensions/navigations.dart';
 import 'package:blenzo/utils/app_color.dart';
-import 'package:blenzo/views/login_screen.dart';
+import 'package:blenzo/views/auth/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 

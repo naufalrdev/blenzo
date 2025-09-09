@@ -1,8 +1,8 @@
 import 'package:blenzo/models/brand/get_brand.dart';
 import 'package:blenzo/services/api/brand_api.dart';
 import 'package:blenzo/utils/app_color.dart';
-import 'package:blenzo/widgets/brand_card.dart';
-import 'package:blenzo/widgets/brand_form_dialog.dart';
+import 'package:blenzo/widgets/brand/brand_card.dart';
+import 'package:blenzo/widgets/brand/brand_form_dialog.dart';
 import 'package:flutter/material.dart';
 
 class BrandListScreen extends StatefulWidget {

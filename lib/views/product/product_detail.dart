@@ -3,7 +3,7 @@ import 'package:blenzo/models/product/get_product.dart';
 import 'package:blenzo/services/api/cart_api.dart';
 import 'package:blenzo/utils/app_color.dart';
 import 'package:blenzo/utils/currency_format.dart';
-import 'package:blenzo/views/cart_screen2.dart';
+import 'package:blenzo/views/cart/cart_screen.dart';
 import 'package:flutter/material.dart';
 
 class ProductDetailPage extends StatefulWidget {
@@ -56,10 +56,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_none, color: Colors.black),
-            onPressed: () {},
-          ),
           IconButton(
             icon: Stack(
               children: [

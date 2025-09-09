@@ -10,6 +10,8 @@ String getCategoryAsset(String categoryName) {
       return "assets/images/topi_removebg.png";
     case "pants":
       return "assets/images/celana_removebg.png";
+    case "watch":
+      return "assets/images/watch.png";
     default:
       return "assets/images/logo_default.png";
   }

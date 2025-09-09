@@ -3,7 +3,7 @@ import 'package:blenzo/models/categories/get_categories.dart';
 import 'package:blenzo/services/api/categories_api.dart';
 import 'package:blenzo/utils/app_color.dart';
 import 'package:blenzo/utils/image_categories.dart';
-import 'package:blenzo/views/all_category.dart';
+import 'package:blenzo/views/categories/all_category.dart';
 import 'package:flutter/material.dart';
 
 class CategoryTab extends StatefulWidget {

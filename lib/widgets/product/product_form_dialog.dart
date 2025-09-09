@@ -17,15 +17,14 @@ Future<AddProdukModel?> showProductFormDialog({
     text: initialData?.description ?? '',
   );
   final priceController = TextEditingController(
-    text: int.tryParse(initialData?.price.toString() ?? '0')?.toString() ?? '',
+    text: initialData?.price != null ? initialData!.price.toString() : '',
   );
 
   final stockController = TextEditingController(
-    text: int.tryParse(initialData?.stock.toString() ?? '0')?.toString() ?? '',
+    text: initialData?.stock != null ? initialData!.stock.toString() : '',
   );
   final discountController = TextEditingController(
-    text:
-        int.tryParse(initialData?.discount.toString() ?? '0')?.toString() ?? '',
+    text: initialData?.discount != null ? initialData!.discount.toString() : '',
   );
 
   String? selectedCategory;
@@ -70,7 +69,7 @@ Future<AddProdukModel?> showProductFormDialog({
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text(
-                    "Semua field wajib diisi dan gambar wajib dipilih (untuk tambah).",
+                    "All fields are required and an image must be selected",
                   ),
                 ),
               );
@@ -114,7 +113,7 @@ Future<AddProdukModel?> showProductFormDialog({
             } catch (e) {
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("Gagal simpan produk: $e")),
+                  SnackBar(content: Text("Oops! Couldn't save product: $e")),
                 );
               }
             } finally {
@@ -123,39 +122,43 @@ Future<AddProdukModel?> showProductFormDialog({
           }
 
           return AlertDialog(
-            title: Text(id == null ? "Tambah Produk" : "Edit Produk"),
+            title: Text(id == null ? "Add Produk" : "Edit Produk"),
             content: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
                     controller: nameController,
-                    decoration: const InputDecoration(labelText: "Nama Produk"),
+                    decoration: const InputDecoration(
+                      labelText: "Product Name",
+                    ),
                   ),
                   TextField(
                     controller: descriptionController,
-                    decoration: const InputDecoration(labelText: "Deskripsi"),
+                    decoration: const InputDecoration(labelText: "Description"),
                     maxLines: 3,
                   ),
                   TextField(
                     controller: priceController,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(labelText: "Harga"),
+                    decoration: const InputDecoration(labelText: "Price (Rp)"),
                   ),
                   TextField(
                     controller: stockController,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(labelText: "Stok"),
+                    decoration: const InputDecoration(labelText: "Stock"),
                   ),
                   TextField(
                     controller: discountController,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(labelText: "Diskon (%)"),
+                    decoration: const InputDecoration(
+                      labelText: "Discount (%)",
+                    ),
                   ),
                   const SizedBox(height: 12),
                   DropdownButtonFormField<int>(
-                    initialValue: selectedCategoryId,
-                    decoration: const InputDecoration(labelText: "Kategori"),
+                    value: selectedCategoryId,
+                    decoration: const InputDecoration(labelText: "Categories"),
                     items: kategoriList.map((kategori) {
                       return DropdownMenuItem<int>(
                         value: kategori["id"],
@@ -173,7 +176,7 @@ Future<AddProdukModel?> showProductFormDialog({
                     },
                   ),
                   DropdownButtonFormField<int>(
-                    initialValue: selectedBrandId,
+                    value: selectedBrandId,
                     decoration: const InputDecoration(labelText: "Brand"),
                     items: brandList.map((brand) {
                       return DropdownMenuItem<int>(
@@ -216,7 +219,7 @@ Future<AddProdukModel?> showProductFormDialog({
                   TextButton.icon(
                     onPressed: pickImages,
                     icon: const Icon(Icons.image),
-                    label: const Text("Pilih Gambar"),
+                    label: const Text("Pick a Picture"),
                   ),
                 ],
               ),
@@ -224,7 +227,7 @@ Future<AddProdukModel?> showProductFormDialog({
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text("Batal"),
+                child: const Text("Cancel"),
               ),
               isLoading
                   ? const SizedBox(
@@ -234,7 +237,7 @@ Future<AddProdukModel?> showProductFormDialog({
                     )
                   : ElevatedButton(
                       onPressed: submit,
-                      child: Text(id == null ? "Tambah" : "Simpan"),
+                      child: Text(id == null ? "Add" : "Save"),
                     ),
             ],
           );

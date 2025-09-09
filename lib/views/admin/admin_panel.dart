@@ -1,8 +1,8 @@
 import 'package:blenzo/extensions/navigations.dart';
 import 'package:blenzo/utils/app_color.dart';
-import 'package:blenzo/views/brand.dart';
-import 'package:blenzo/views/categories.dart';
-import 'package:blenzo/views/product.dart';
+import 'package:blenzo/views/admin/brand.dart';
+import 'package:blenzo/views/admin/categories.dart';
+import 'package:blenzo/views/admin/product.dart';
 import 'package:flutter/material.dart';
 
 class AdminPanelScreen extends StatefulWidget {
@@ -80,8 +80,6 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
       ),
       body: ListView(
         children: [
-          // Section General
-          // buildSectionTitle("General"),
           buildSettingItem(
             icon: Icons.person_outline,
             title: "Brand",
