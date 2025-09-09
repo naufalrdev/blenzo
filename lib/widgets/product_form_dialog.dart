@@ -1,8 +1,9 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+
 import 'package:blenzo/models/product/add_product.dart';
 import 'package:blenzo/services/api/product_api.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 Future<AddProdukModel?> showProductFormDialog({
   required BuildContext context,
@@ -16,16 +17,15 @@ Future<AddProdukModel?> showProductFormDialog({
     text: initialData?.description ?? '',
   );
   final priceController = TextEditingController(
-    text: int.tryParse(initialData?.price?.toString() ?? '0')?.toString() ?? '',
+    text: int.tryParse(initialData?.price.toString() ?? '0')?.toString() ?? '',
   );
 
   final stockController = TextEditingController(
-    text: int.tryParse(initialData?.stock?.toString() ?? '0')?.toString() ?? '',
+    text: int.tryParse(initialData?.stock.toString() ?? '0')?.toString() ?? '',
   );
   final discountController = TextEditingController(
     text:
-        int.tryParse(initialData?.discount?.toString() ?? '0')?.toString() ??
-        '',
+        int.tryParse(initialData?.discount.toString() ?? '0')?.toString() ?? '',
   );
 
   String? selectedCategory;
@@ -59,7 +59,7 @@ Future<AddProdukModel?> showProductFormDialog({
             }
           }
 
-          Future<void> _submit() async {
+          Future<void> submit() async {
             if (nameController.text.isEmpty ||
                 descriptionController.text.isEmpty ||
                 priceController.text.isEmpty ||
@@ -154,7 +154,7 @@ Future<AddProdukModel?> showProductFormDialog({
                   ),
                   const SizedBox(height: 12),
                   DropdownButtonFormField<int>(
-                    value: selectedCategoryId,
+                    initialValue: selectedCategoryId,
                     decoration: const InputDecoration(labelText: "Kategori"),
                     items: kategoriList.map((kategori) {
                       return DropdownMenuItem<int>(
@@ -173,7 +173,7 @@ Future<AddProdukModel?> showProductFormDialog({
                     },
                   ),
                   DropdownButtonFormField<int>(
-                    value: selectedBrandId,
+                    initialValue: selectedBrandId,
                     decoration: const InputDecoration(labelText: "Brand"),
                     items: brandList.map((brand) {
                       return DropdownMenuItem<int>(
@@ -233,7 +233,7 @@ Future<AddProdukModel?> showProductFormDialog({
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : ElevatedButton(
-                      onPressed: _submit,
+                      onPressed: submit,
                       child: Text(id == null ? "Tambah" : "Simpan"),
                     ),
             ],

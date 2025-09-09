@@ -1,10 +1,10 @@
 import 'package:blenzo/extensions/navigations.dart';
 import 'package:blenzo/services/local/shared_prefs_service.dart';
 import 'package:blenzo/utils/app_color.dart';
+import 'package:blenzo/views/admin_panel.dart';
 import 'package:blenzo/views/categories.dart';
 import 'package:blenzo/views/edit_profile.dart';
 import 'package:blenzo/views/onboard_screen.dart';
-import 'package:blenzo/views/brand.dart';
 import 'package:blenzo/views/product.dart';
 import 'package:flutter/material.dart';
 
@@ -99,7 +99,7 @@ class _SettingScreenState extends State<SettingScreen> {
             icon: Icons.lock_outline,
             title: "Admin Panel",
             onTap: () {
-              context.push(BrandListScreen());
+              context.push(AdminPanelScreen());
             },
           ),
           buildSettingItem(

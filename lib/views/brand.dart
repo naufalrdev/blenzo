@@ -1,8 +1,9 @@
 import 'package:blenzo/models/brand/get_brand.dart';
-import 'package:flutter/material.dart';
 import 'package:blenzo/services/api/brand_api.dart';
+import 'package:blenzo/utils/app_color.dart';
 import 'package:blenzo/widgets/brand_card.dart';
 import 'package:blenzo/widgets/brand_form_dialog.dart';
+import 'package:flutter/material.dart';
 
 class BrandListScreen extends StatefulWidget {
   const BrandListScreen({super.key});
@@ -100,10 +101,23 @@ class _BrandListScreenState extends State<BrandListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Daftar Brand")),
+      backgroundColor: AppColor.background,
+      appBar: AppBar(
+        backgroundColor: AppColor.background,
+        title: const Text(
+          "List Brand",
+          style: TextStyle(
+            fontFamily: "Montserrat",
+            color: AppColor.text,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        centerTitle: true,
+      ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColor.primary,
         onPressed: _openAddDialog,
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: AppColor.neutral),
       ),
       body: FutureBuilder<GetBrandModel>(
         future: _brands,
