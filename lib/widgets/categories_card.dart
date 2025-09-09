@@ -1,4 +1,3 @@
-import 'package:blenzo/models/brand/get_brand.dart';
 import 'package:blenzo/models/categories/get_categories.dart';
 import 'package:blenzo/utils/app_color.dart';
 import 'package:flutter/material.dart';

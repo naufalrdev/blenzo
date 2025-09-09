@@ -63,7 +63,7 @@ class AuthenticationApiCat {
   static Future<DeleteModel> deleteCategories({
     required int categoriesId,
   }) async {
-    final url = Uri.parse("${Endpoint.brands}/$categoriesId");
+    final url = Uri.parse("${Endpoint.categories}/$categoriesId");
     final token = await PreferenceHandler.getToken();
 
     final response = await http.delete(

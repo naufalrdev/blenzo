@@ -1,7 +1,7 @@
+import 'package:blenzo/models/categories/get_categories.dart';
 import 'package:blenzo/services/api/categories_api.dart';
 import 'package:blenzo/widgets/categories_form_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:blenzo/models/categories/get_categories.dart';
 
 class CategoriesListScreen extends StatefulWidget {
   const CategoriesListScreen({super.key});
@@ -115,6 +115,7 @@ class _CategoriesListScreenState extends State<CategoriesListScreen> {
               final category = categories[index];
               return ListTile(
                 title: Text(category.name),
+                subtitle: Text(category.id.toString()),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
