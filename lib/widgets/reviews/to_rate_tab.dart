@@ -1,10 +1,10 @@
-import 'package:blenzo/utils/app_color.dart';
-import 'package:blenzo/utils/currency_format.dart';
-import 'package:flutter/material.dart';
+import 'package:blenzo/extensions/navigations.dart'; // kalau kamu pakai context.push
 import 'package:blenzo/models/history/get_history.dart';
 import 'package:blenzo/services/api/history_api.dart';
+import 'package:blenzo/utils/app_color.dart';
+import 'package:blenzo/utils/currency_format.dart';
 import 'package:blenzo/views/review/add_review.dart'; // pastikan sudah ada halaman ini
-import 'package:blenzo/extensions/navigations.dart'; // kalau kamu pakai context.push
+import 'package:flutter/material.dart';
 
 class ToRateTab extends StatefulWidget {
   final Function(Kultum)? onReviewed;
@@ -125,7 +125,7 @@ class _ToRateTabState extends State<ToRateTab> {
 
                         if (result == true) {
                           setState(() {
-                            item.hasReviewed = true;
+                            item.hasReviewed = false;
                           });
                           if (widget.onReviewed != null) {
                             widget.onReviewed!(item);
