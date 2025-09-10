@@ -18,33 +18,37 @@ class _OnboardScreenState extends State<OnboardScreen> {
     required String title,
     required String subtitle,
   }) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(height: 250, child: Image.asset(image)),
-        SizedBox(height: 20),
-        Text(
-          title,
-          style: TextStyle(
-            fontFamily: "Montserrat",
-            fontSize: 24,
-            fontWeight: FontWeight.w800,
-            color: AppColor.text,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(height: 250, child: Image.asset(image)),
+          SizedBox(height: 20),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: "Montserrat",
+              fontSize: 24,
+              fontWeight: FontWeight.w800,
+              color: AppColor.text,
+            ),
           ),
-        ),
-        SizedBox(height: 10),
-        Text(
-          subtitle,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontFamily: "Montserrat",
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: AppColor.text2,
+          SizedBox(height: 10),
+          Text(
+            subtitle,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: "Montserrat",
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: AppColor.text2,
+            ),
           ),
-        ),
-        SizedBox(height: 40),
-      ],
+          SizedBox(height: 40),
+        ],
+      ),
     );
   }
 
@@ -115,18 +119,21 @@ class _OnboardScreenState extends State<OnboardScreen> {
                 children: [
                   buildPage(
                     image: "assets/images/choose_product_removebg.png",
-                    title: "Choose Products",
-                    subtitle: "Pilih Produk",
+                    title: "Choose Your Favorite Products",
+                    subtitle:
+                        "Explore a wide range of categories and discover the best items that fit your needs. With thousands of options, shopping becomes simple and enjoyable",
                   ),
                   buildPage(
                     image: "assets/images/make_payment_removebg.png",
-                    title: "Make Payment",
-                    subtitle: "Pembayaran",
+                    title: "Easy & Secure Payments",
+                    subtitle:
+                        "Enjoy flexible payment methods designed for your comfort. Every transaction is fast, reliable, and completely secure",
                   ),
                   buildPage(
                     image: "assets/images/get_order_removebg.png",
-                    title: "Get Your Order",
-                    subtitle: "TERUMUKUSU",
+                    title: "Track Your Orders Anytime",
+                    subtitle:
+                        "From confirmation to delivery, stay updated on your order status in real-time. Shop with peace of mind knowing everything is transparent",
                   ),
                 ],
               ),

@@ -1,13 +1,13 @@
 import 'package:blenzo/extensions/navigations.dart';
+import 'package:blenzo/models/cart/get_cart.dart';
 import 'package:blenzo/models/checkout/add_checkout.dart';
+import 'package:blenzo/services/api/cart_api.dart';
 import 'package:blenzo/services/api/checkout_api.dart';
 import 'package:blenzo/services/local/shared_prefs_service.dart';
-import 'package:blenzo/utils/get_discount.dart';
-import 'package:flutter/material.dart';
-import 'package:blenzo/models/cart/get_cart.dart';
-import 'package:blenzo/services/api/cart_api.dart';
 import 'package:blenzo/utils/app_color.dart';
 import 'package:blenzo/utils/currency_format.dart';
+import 'package:blenzo/utils/get_discount.dart';
+import 'package:flutter/material.dart';
 
 class CartPage2 extends StatefulWidget {
   const CartPage2({super.key});
@@ -357,7 +357,7 @@ class _CartPage2State extends State<CartPage2> {
     return Scaffold(
       backgroundColor: AppColor.background,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColor.background,
         elevation: 1,
         title: const Text(
           "My cart",
@@ -367,6 +367,7 @@ class _CartPage2State extends State<CartPage2> {
             color: AppColor.text,
           ),
         ),
+        centerTitle: true,
         actions: [
           TextButton(
             onPressed: () {
